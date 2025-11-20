@@ -1,334 +1,517 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
-  <title>3-30-300 Index Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="utf-8" />
+    <title>3-30-300 Index Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Tabler CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <!-- Tabler CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler-vendors.min.css" rel="stylesheet" />
 
-  <!-- MapLibre -->
-  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet"/>
-  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- MapLibre -->
+    <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <style>
-    #map { width: 100%; height: 420px; border-radius: 10px; }
-    body { background-color: #f5f7fb; }
-    .page-header {
-      background: linear-gradient(135deg, #134478, #1b7f5f);
-      color: #fff;
-      padding: 1.5rem 0 1.25rem 0;
-      margin-bottom: 1.5rem;
-    }
-    .page-header .navbar-brand-text {
-      color: #fff;
-      font-weight: 600;
-      letter-spacing: .03em;
-      text-transform: uppercase;
-      font-size: .9rem;
-    }
-    .page-header-subtitle {
-      font-size: .95rem;
-      opacity: .9;
-    }
-    footer {
-      border-top: 1px solid #e5e7f0;
-      margin-top: 2rem;
-      padding: 1.5rem 0;
-      font-size: .8rem;
-      color: #6c757d;
-    }
-  </style>
+    <style>
+         :root {
+            --talea-green-dark: #17361C;
+            --talea-green: #79CF89;
+            --talea-blue: #4E84C7;
+            --talea-yellow: #F7E80D;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--talea-blue), var(--talea-green));
+            color: #fff;
+            padding: 1.5rem 0 1.25rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-header .navbar-brand-text {
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: .03em;
+            text-transform: uppercase;
+            font-size: .9rem;
+        }
+        
+        .page-header-subtitle {
+            font-size: .95rem;
+            opacity: .9;
+        }
+        
+        #map-score,
+        #map-criterion30 {
+            width: 100%;
+            height: 420px;
+            border-radius: 10px;
+        }
+        
+        footer {
+            border-top: 1px solid #e5e7f0;
+            margin-top: 2rem;
+            padding: 1.5rem 0;
+            font-size: .8rem;
+            color: #6c757d;
+        }
+        
+        .legend {
+            margin-top: .75rem;
+            font-size: .8rem;
+        }
+        
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: .75rem;
+        }
+        
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            margin-right: .35rem;
+            border: 1px solid #ccc;
+        }
+        
+        .legend-color.c0 {
+            background-color: #d9534f;
+        }
+        
+        .legend-color.c1 {
+            background-color: #f0ad4e;
+        }
+        
+        .legend-color.c2 {
+            background-color: #5bc0de;
+        }
+        
+        .legend-color.c3 {
+            background-color: #5cb85c;
+        }
+        
+        .legend-color.canopy-0 {
+            background-color: #f7fbff;
+        }
+        
+        .legend-color.canopy-1 {
+            background-color: #c6dbef;
+        }
+        
+        .legend-color.canopy-2 {
+            background-color: #6baed6;
+        }
+        
+        .legend-color.canopy-3 {
+            background-color: #2171b5;
+        }
+        
+        .legend-color.canopy-4 {
+            background-color: #08306b;
+        }
+        
+        .card-title {
+            color: var(--talea-green-dark);
+        }
+        
+        .subheader {
+            color: var(--talea-blue);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+        
+        .btn-lang {
+            border-color: rgba(255, 255, 255, .7);
+            color: #fff;
+        }
+        
+        .btn-lang:hover {
+            background-color: rgba(0, 0, 0, .1);
+            color: #fff;
+        }
+    </style>
 </head>
+
 <body>
-<div class="page">
+    <div class="page">
 
-  <!-- HEADER STILE "PROGETTO EUROPEO" -->
-  <header class="page-header">
-    <div class="container-xl">
-      <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <div class="navbar-brand">
-            <span class="navbar-brand-text">Urban Green Accessibility</span>
-          </div>
-          <h1 class="h2 mb-1">3-30-300 Index Dashboard</h1>
-          <p class="page-header-subtitle mb-0">
-            Evidence-based support for climate-resilient and inclusive cities /
-            Supporto alla transizione verde urbana basato su dati.
-          </p>
+        <!-- HEADER -->
+        <header class="page-header">
+            <div class="container-xl">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="navbar-brand">
+                            <span class="navbar-brand-text" data-i18n="header.brand"></span>
+                        </div>
+                        <h1 class="h2 mb-1" data-i18n="header.title"></h1>
+                        <p class="page-header-subtitle mb-0" data-i18n="header.subtitle"></p>
+                    </div>
+                    <div class="text-end">
+                        <button id="lang-toggle" class="btn btn-sm btn-outline-light btn-lang" type="button">
+            EN
+          </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="container-xl">
+
+                    <!-- INTRO -->
+                    <div class="row row-cards mb-3">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2" data-i18n="intro.title"></h3>
+                                    <p class="text-muted mb-2" data-i18n="intro.p1"></p>
+                                    <ul class="text-muted mb-2">
+                                        <li data-i18n="intro.li3"></li>
+                                        <li data-i18n="intro.li30"></li>
+                                        <li data-i18n="intro.li300"></li>
+                                    </ul>
+                                    <p class="text-muted mb-0" data-i18n="intro.p2"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2" data-i18n="intro2.title"></h3>
+                                    <p class="text-muted mb-0" data-i18n="intro2.p"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUMMARY CARDS -->
+                    <div class="row row-cards">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="subheader" data-i18n="card3.sub"></div>
+                                    <div class="h1 mb-1" id="summary-3">-- %</div>
+                                    <p class="text-muted mb-0" data-i18n="card3.text"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="subheader" data-i18n="card30.sub"></div>
+                                    <div class="h1 mb-1" id="summary-30">-- %</div>
+                                    <p class="text-muted mb-0" data-i18n="card30.text"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="subheader" data-i18n="card300.sub"></div>
+                                    <div class="h1 mb-1" id="summary-300">-- %</div>
+                                    <p class="text-muted mb-0" data-i18n="card300.text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHARTS -->
+                    <div class="row row-cards mt-3">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-1" data-i18n="chart.perc.title"></h3>
+                                    <p class="text-muted mb-2" data-i18n="chart.perc.text"></p>
+                                    <canvas id="chart-percentages" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-1" data-i18n="chart.dist.title"></h3>
+                                    <p class="text-muted mb-2" data-i18n="chart.dist.text"></p>
+                                    <canvas id="chart-distribution" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCORE SUMMARY + MAP -->
+                    <div class="row row-cards mt-3">
+                        <div class="col-md-5">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2" data-i18n="summary.score.title"></h3>
+                                    <p class="text-muted" data-i18n="summary.score.text"></p>
+                                    <div id="conditions-dist" class="row g-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2" data-i18n="map.score.title"></h3>
+                                    <p class="text-muted mb-2" data-i18n="map.score.text"></p>
+                                    <div id="map-score"></div>
+                                    <div class="legend">
+                                        <span class="legend-item"><span class="legend-color c0"></span><span data-i18n="legend.score.c0"></span></span>
+                                        <span class="legend-item"><span class="legend-color c1"></span><span data-i18n="legend.score.c1"></span></span>
+                                        <span class="legend-item"><span class="legend-color c2"></span><span data-i18n="legend.score.c2"></span></span>
+                                        <span class="legend-item"><span class="legend-color c3"></span><span data-i18n="legend.score.c3"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CANOPY MAP -->
+                    <div class="row row-cards mt-3">
+                        <div class="col-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2" data-i18n="map.canopy.title"></h3>
+                                    <p class="text-muted mb-2" data-i18n="map.canopy.text"></p>
+                                    <div id="map-criterion30"></div>
+                                    <div class="legend">
+                                        <span class="legend-item"><span class="legend-color canopy-0"></span><span data-i18n="legend.canopy.0"></span></span>
+                                        <span class="legend-item"><span class="legend-color canopy-1"></span><span data-i18n="legend.canopy.1"></span></span>
+                                        <span class="legend-item"><span class="legend-color canopy-2"></span><span data-i18n="legend.canopy.2"></span></span>
+                                        <span class="legend-item"><span class="legend-color canopy-3"></span><span data-i18n="legend.canopy.3"></span></span>
+                                        <span class="legend-item"><span class="legend-color canopy-4"></span><span data-i18n="legend.canopy.4"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE -->
+                    <div class="row row-cards mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title" data-i18n="table.title"></h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                            <tr>
+                                                <th data-i18n="table.h.id"></th>
+                                                <th data-i18n="table.h.area"></th>
+                                                <th data-i18n="table.h.c3"></th>
+                                                <th data-i18n="table.h.c30"></th>
+                                                <th data-i18n="table.h.c300"></th>
+                                                <th data-i18n="table.h.score"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="areas-table"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <footer>
+                        <div class="container-xl">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <span data-i18n="footer.text"></span>
+                                </div>
+                                <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                                    <span data-i18n="footer.maintainer"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
         </div>
-        <div class="text-end d-none d-md-block">
-          <div class="text-uppercase text-muted" style="font-size:.7rem;">Bilingual</div>
-          <div><strong>EN / IT</strong></div>
-        </div>
-      </div>
     </div>
-  </header>
 
-  <div class="page-wrapper">
-    <div class="page-body">
-      <div class="container-xl">
+    <!-- Tabler JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
 
-        <!-- INTRO BILINGUE -->
-        <div class="row row-cards mb-3">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h3 class="card-title mb-2">Overview (EN)</h3>
-                <p class="text-muted mb-2">
-                  The 3-30-300 index measures how each urban area satisfies three core
-                  green accessibility criteria:
-                </p>
-                <ul class="text-muted mb-2">
-                  <li><strong>3</strong> – proximity of buildings to at least three trees</li>
-                  <li><strong>30</strong> – at least 30% tree canopy coverage</li>
-                  <li><strong>300</strong> – access to parks within 300 m from buildings</li>
-                </ul>
-                <p class="text-muted mb-0">
-                  This dashboard summarises these indicators at statistical-area level,
-                  supporting analysis on urban fragility, environmental quality and
-                  climate adaptation strategies.
-                </p>
-              </div>
-            </div>
-          </div>
+    <script>
+        const translations = {
+            en: {
+                "header.brand": "Urban Green Accessibility",
+                "header.title": "3-30-300 Index Dashboard",
+                "header.subtitle": "Evidence-based support for climate-resilient and inclusive cities.",
+                "intro.title": "What is the 3-30-300 index?",
+                "intro.p1": "The 3-30-300 index evaluates how each urban statistical area satisfies three key green accessibility criteria:",
+                "intro.li3": "3 – buildings are close to at least three trees.",
+                "intro.li30": "30 – tree canopy coverage reaches at least 30% of the area.",
+                "intro.li300": "300 – most buildings are within 300 m of a park or garden.",
+                "intro.p2": "Indicators are computed at statistical-area level and can support analysis of urban fragility, environmental quality and climate adaptation strategies.",
+                "intro2.title": "How to read this dashboard",
+                "intro2.p": "Summary cards show the share of areas meeting each criterion. Charts describe the distribution of scores from 0 to 3. Maps provide a spatial view of the overall score and of canopy coverage. The table reports the detailed indicators for each statistical area.",
+                "card3.sub": "Criterion 3",
+                "card3.text": "Percentage of areas where a sufficient share of buildings is near at least three trees.",
+                "card30.sub": "Criterion 30",
+                "card30.text": "Percentage of areas with tree canopy coverage greater than or equal to 30%.",
+                "card300.sub": "Criterion 300",
+                "card300.text": "Percentage of areas where most buildings are within 300 m of a park or garden.",
+                "chart.perc.title": "Share of areas meeting each criterion",
+                "chart.perc.text": "Percentage of statistical areas that satisfy each component of the 3-30-300 index.",
+                "chart.dist.title": "Areas by score (0–3)",
+                "chart.dist.text": "Number of areas by how many conditions they meet (from 0 to 3).",
+                "summary.score.title": "Summary by score",
+                "summary.score.text": "Each box shows how many statistical areas satisfy 0, 1, 2 or 3 conditions of the 3-30-300 index.",
+                "map.score.title": "Map – 3-30-300 score per area",
+                "map.score.text": "Areas are coloured by the number of conditions met (0–3).",
+                "legend.score.c0": "Score 0 – none of the conditions are met.",
+                "legend.score.c1": "Score 1 – one condition is met.",
+                "legend.score.c2": "Score 2 – two conditions are met.",
+                "legend.score.c3": "Score 3 – all three conditions are met.",
+                "map.canopy.title": "Map – canopy coverage (criterion 30)",
+                "map.canopy.text": "Areas are coloured by tree canopy coverage (perc_canopy_cover_30). Darker tones indicate higher canopy coverage.",
+                "legend.canopy.0": "0–10% canopy",
+                "legend.canopy.1": "10–30% canopy",
+                "legend.canopy.2": "30–60% canopy",
+                "legend.canopy.3": "60–90% canopy",
+                "legend.canopy.4": "90–100% canopy",
+                "table.title": "Indicators by statistical area",
+                "table.h.id": "ID",
+                "table.h.area": "Area",
+                "table.h.c3": "3",
+                "table.h.c30": "30",
+                "table.h.c300": "300",
+                "table.h.score": "Score",
+                "footer.text": "Dashboard for exploratory analysis of the 3-30-300 index at statistical-area level. Data and code are provided for research, planning and public discussion.",
+                "footer.maintainer": "Maintainer: Maurizio “Napo” Napolitano"
+            },
+            it: {
+                "header.brand": "Accessibilità al verde urbano",
+                "header.title": "Dashboard indice 3-30-300",
+                "header.subtitle": "Supporto alla transizione verde urbana e alla resilienza climatica basato su dati.",
+                "intro.title": "Cos’è l’indice 3-30-300?",
+                "intro.p1": "L’indice 3-30-300 valuta quanto ogni area statistica urbana soddisfa tre criteri chiave di accessibilità al verde:",
+                "intro.li3": "3 – edifici in prossimità di almeno tre alberi.",
+                "intro.li30": "30 – copertura arborea pari ad almeno il 30% dell’area.",
+                "intro.li300": "300 – la maggior parte degli edifici si trova entro 300 m da un parco o giardino.",
+                "intro.p2": "Gli indicatori sono calcolati a livello di area statistica e possono supportare analisi su fragilità urbana, qualità ambientale e strategie di adattamento climatico.",
+                "intro2.title": "Come leggere questa dashboard",
+                "intro2.p": "Le card di sintesi mostrano la quota di aree che soddisfa ciascun criterio. I grafici descrivono la distribuzione dei punteggi da 0 a 3. Le mappe offrono una vista spaziale del punteggio complessivo e della copertura arborea. La tabella riporta gli indicatori di dettaglio per ogni area statistica.",
+                "card3.sub": "Criterio 3",
+                "card3.text": "Percentuale di aree in cui una quota sufficiente di edifici è vicina ad almeno tre alberi.",
+                "card30.sub": "Criterio 30",
+                "card30.text": "Percentuale di aree con copertura arborea maggiore o uguale al 30%.",
+                "card300.sub": "Criterio 300",
+                "card300.text": "Percentuale di aree in cui la maggior parte degli edifici è entro 300 m da un parco o giardino.",
+                "chart.perc.title": "Quota di aree che soddisfa ciascun criterio",
+                "chart.perc.text": "Percentuale di aree statistiche che soddisfa ciascun componente dell’indice 3-30-300.",
+                "chart.dist.title": "Aree per punteggio (0–3)",
+                "chart.dist.text": "Numero di aree in base al numero di condizioni soddisfatte (da 0 a 3).",
+                "summary.score.title": "Sintesi per punteggio",
+                "summary.score.text": "Ogni riquadro mostra quante aree statistiche soddisfano 0, 1, 2 o 3 condizioni dell’indice 3-30-300.",
+                "map.score.title": "Mappa – punteggio 3-30-300 per area",
+                "map.score.text": "Le aree sono colorate in base al numero di condizioni soddisfatte (0–3).",
+                "legend.score.c0": "Punteggio 0 – nessuna condizione soddisfatta.",
+                "legend.score.c1": "Punteggio 1 – una condizione soddisfatta.",
+                "legend.score.c2": "Punteggio 2 – due condizioni soddisfatte.",
+                "legend.score.c3": "Punteggio 3 – tutte e tre le condizioni soddisfatte.",
+                "map.canopy.title": "Mappa – copertura arborea (criterio 30)",
+                "map.canopy.text": "Le aree sono colorate in base alla copertura arborea (perc_canopy_cover_30). I toni più scuri indicano una maggiore copertura.",
+                "legend.canopy.0": "0–10% canopy",
+                "legend.canopy.1": "10–30% canopy",
+                "legend.canopy.2": "30–60% canopy",
+                "legend.canopy.3": "60–90% canopy",
+                "legend.canopy.4": "90–100% canopy",
+                "table.title": "Indicatori per area statistica",
+                "table.h.id": "ID",
+                "table.h.area": "Area",
+                "table.h.c3": "3",
+                "table.h.c30": "30",
+                "table.h.c300": "300",
+                "table.h.score": "Punteggio",
+                "footer.text": "Dashboard per l’analisi esplorativa dell’indice 3-30-300 a livello di area statistica. Dati e codice sono forniti per ricerca, pianificazione e discussione pubblica.",
+                "footer.maintainer": "Referente: Maurizio “Napo” Napolitano"
+            }
+        };
 
-          <div class="col-md-6" id="versione-italiana">
-            <div class="card">
-              <div class="card-body">
-                <h3 class="card-title mb-2">Panoramica (IT)</h3>
-                <p class="text-muted mb-2">
-                  L’indice 3-30-300 misura quanto ogni area urbana soddisfa tre
-                  criteri chiave di accessibilità al verde:
-                </p>
-                <ul class="text-muted mb-2">
-                  <li><strong>3</strong> – edifici in prossimità di almeno tre alberi</li>
-                  <li><strong>30</strong> – copertura arborea pari ad almeno il 30%</li>
-                  <li><strong>300</strong> – accesso a parchi entro 300 m dagli edifici</li>
-                </ul>
-                <p class="text-muted mb-0">
-                  Questa dashboard riassume tali indicatori a livello di area statistica,
-                  supportando analisi su fragilità urbana, qualità ambientale e strategie
-                  di adattamento climatico.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        let currentLang = "en";
 
-        <!-- SUMMARY CARDS -->
-        <div class="row row-cards">
-          <div class="col-sm-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="subheader">Criterion 3 / Criterio 3</div>
-                <div class="h1 mb-1" id="summary-3">-- %</div>
-                <p class="text-muted mb-0">
-                  Areas where a sufficient share of buildings is near ≥3 trees.<br>
-                  Aree in cui una quota sufficiente di edifici è vicina ad almeno 3 alberi.
-                </p>
-              </div>
-            </div>
-          </div>
+        function applyTranslations(lang) {
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.getAttribute("data-i18n");
+                if (translations[lang][key] !== undefined) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            const btn = document.getElementById("lang-toggle");
+            btn.textContent = lang.toUpperCase();
+        }
 
-          <div class="col-sm-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="subheader">Criterion 30 / Criterio 30</div>
-                <div class="h1 mb-1" id="summary-30">-- %</div>
-                <p class="text-muted mb-0">
-                  Areas with at least 30% tree canopy coverage.<br>
-                  Aree con una copertura arborea di almeno il 30%.
-                </p>
-              </div>
-            </div>
-          </div>
+        document.getElementById("lang-toggle").addEventListener("click", () => {
+            currentLang = currentLang === "en" ? "it" : "en";
+            applyTranslations(currentLang);
+        });
 
-          <div class="col-sm-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="subheader">Criterion 300 / Criterio 300</div>
-                <div class="h1 mb-1" id="summary-300">-- %</div>
-                <p class="text-muted mb-0">
-                  Areas where most buildings are within 300 m of a park.<br>
-                  Aree in cui la maggior parte degli edifici è entro 300 m da un parco.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        async function loadData() {
+            applyTranslations(currentLang);
 
-        <!-- CHARTS -->
-        <div class="row row-cards mt-3">
-          <div class="col-md-6">
-            <div class="card h-100">
-              <div class="card-body">
-                <h3 class="card-title mb-1">
-                  Share of areas meeting each criterion / Quota di aree che soddisfano i criteri
-                </h3>
-                <p class="text-muted mb-2">
-                  Percentage of statistical areas that satisfy each 3-30-300 component.
-                  Percentuale di aree statistiche che soddisfa ciascun componente.
-                </p>
-                <canvas id="chart-percentages" height="200"></canvas>
-              </div>
-            </div>
-          </div>
+            const res = await fetch("data/3-30-300-index.geojson");
+            const geojson = await res.json();
+            const features = geojson.features;
 
-          <div class="col-md-6">
-            <div class="card h-100">
-              <div class="card-body">
-                <h3 class="card-title mb-1">
-                  Areas by score (0–3) / Aree per punteggio (0–3)
-                </h3>
-                <p class="text-muted mb-2">
-                  Number of areas by how many conditions they meet (0–3).
-                  Numero di aree in base al numero di condizioni soddisfatte (0–3).
-                </p>
-                <canvas id="chart-distribution" height="200"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
+            const perc = field =>
+                100 * (features.filter(f => f.properties[field] === true).length / features.length);
 
-        <!-- DISTRIBUZIONE + MAPPA -->
-        <div class="row row-cards mt-3">
-          <div class="col-md-5">
-            <div class="card h-100">
-              <div class="card-body">
-                <h3 class="card-title mb-2">
-                  Summary by score / Sintesi per punteggio
-                </h3>
-                <p class="text-muted">
-                  Each box shows how many statistical areas meet 0, 1, 2 or 3
-                  conditions of the 3-30-300 index.<br>
-                  Ogni riquadro mostra quante aree statistiche soddisfano 0, 1, 2 o 3
-                  condizioni dell’indice 3-30-300.
-                </p>
-                <div id="conditions-dist" class="row g-2"></div>
-              </div>
-            </div>
-          </div>
+            const p3 = perc("meet_3");
+            const p30 = perc("meet_30");
+            const p300 = perc("meet_300");
 
-          <div class="col-md-7">
-            <div class="card h-100">
-              <div class="card-body">
-                <h3 class="card-title mb-2">
-                  Map — 3-30-300 score per area / Punteggio per area
-                </h3>
-                <p class="text-muted mb-2">
-                  Areas are coloured by the number of conditions met (0–3).<br>
-                  Le aree sono colorate in base al numero di condizioni soddisfatte (0–3).
-                </p>
-                <div id="map"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+            document.getElementById("summary-3").textContent = p3.toFixed(1) + "%";
+            document.getElementById("summary-30").textContent = p30.toFixed(1) + "%";
+            document.getElementById("summary-300").textContent = p300.toFixed(1) + "%";
 
-        <!-- TABELLA AREE -->
-        <div class="row row-cards mt-4">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Indicators by statistical area / Indicatori per area statistica
-                </h3>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-vcenter card-table">
-                  <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Area</th>
-                    <th>3</th>
-                    <th>30</th>
-                    <th>300</th>
-                    <th>Score</th>
-                  </tr>
-                  </thead>
-                  <tbody id="areas-table"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+            const dist = {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0
+            };
+            features.forEach(f => {
+                const k = f.properties.num_conditions_met;
+                if (dist.hasOwnProperty(k)) dist[k] += 1;
+            });
 
-        <!-- FOOTER -->
-        <footer>
-          <div class="container-xl">
-            <div class="row">
-              <div class="col-md-8">
-                Dashboard for exploratory analysis of the 3-30-300 index at
-                statistical-area level. Data and code are provided for research,
-                planning and public discussion.<br>
-                Dashboard per l’analisi esplorativa dell’indice 3-30-300 a livello
-                di area statistica. Dati e codice sono forniti per ricerca,
-                pianificazione e discussione pubblica.
-              </div>
-              <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                Maintainer: Talea Project 
-              </div>
-            </div>
-          </div>
-        </footer>
-
-      </div><!-- container -->
-    </div><!-- page-body -->
-  </div><!-- page-wrapper -->
-</div><!-- page -->
-
-<!-- Tabler JS -->
-<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
-
-<script>
-async function loadData() {
-  const res = await fetch("data/3-30-300-index.geojson");
-  const geojson = await res.json();
-  const features = geojson.features;
-
-  // --- SUMMARY (% aree che soddisfano ciascun criterio) ---
-  const perc = field =>
-    100 * (features.filter(f => f.properties[field] === true).length / features.length);
-
-  const p3 = perc("meet_3");
-  const p30 = perc("meet_30");
-  const p300 = perc("meet_300");
-
-  document.getElementById("summary-3").textContent = p3.toFixed(1) + "%";
-  document.getElementById("summary-30").textContent = p30.toFixed(1) + "%";
-  document.getElementById("summary-300").textContent = p300.toFixed(1) + "%";
-
-  // --- DISTRIBUZIONE SCORE 0–3 ---
-  const dist = {0:0,1:0,2:0,3:0};
-  features.forEach(f => {
-    const k = f.properties.num_conditions_met;
-    if (dist.hasOwnProperty(k)) dist[k] += 1;
-  });
-
-  const distDiv = document.getElementById("conditions-dist");
-  Object.keys(dist).forEach(k => {
-    const col = document.createElement("div");
-    col.className = "col-6 col-sm-3";
-    col.innerHTML = `
+            const distDiv = document.getElementById("conditions-dist");
+            Object.keys(dist).forEach(k => {
+                const col = document.createElement("div");
+                col.className = "col-6 col-sm-3";
+                col.innerHTML = `
       <div class="border rounded p-2 text-center">
         <div class="h2 mb-0">${dist[k]}</div>
         <div class="text-muted">C = ${k}</div>
       </div>`;
-    distDiv.appendChild(col);
-  });
+                distDiv.appendChild(col);
+            });
 
-  // --- TABELLA AREE ---
-  const tbody = document.getElementById("areas-table");
-  features.forEach(f => {
-    const p = f.properties;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+            const tbody = document.getElementById("areas-table");
+            features.forEach(f => {
+                const p = f.properties;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
       <td>${p.stat_area_id}</td>
       <td>${p.stat_area_name}</td>
       <td>${p.meet_3 ? "✔" : "✖"}</td>
@@ -336,114 +519,177 @@ async function loadData() {
       <td>${p.meet_300 ? "✔" : "✖"}</td>
       <td>${p.num_conditions_met}</td>
     `;
-    tbody.appendChild(tr);
-  });
+                tbody.appendChild(tr);
+            });
 
-  // --- CHART: PERCENTUALI 3/30/300 ---
-  const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
-  new Chart(ctxPerc, {
-    type: 'bar',
-    data: {
-      labels: ['3', '30', '300'],
-      datasets: [{
-        label: '% of areas / % aree',
-        data: [p3, p30, p300],
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { callback: value => value + '%' },
-          title: { display: true, text: 'Percentage / Percentuale' }
+            // charts
+            const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
+            new Chart(ctxPerc, {
+                type: 'bar',
+                data: {
+                    labels: ['3', '30', '300'],
+                    datasets: [{
+                        data: [p3, p30, p300],
+                        backgroundColor: ["var(--talea-blue)", "var(--talea-green)", "var(--talea-yellow)"]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => v + '%'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxDist = document.getElementById("chart-distribution").getContext("2d");
+            new Chart(ctxDist, {
+                type: 'bar',
+                data: {
+                    labels: ['0', '1', '2', '3'],
+                    datasets: [{
+                        data: [dist[0], dist[1], dist[2], dist[3]],
+                        backgroundColor: [
+                            "#d9534f",
+                            "#f0ad4e",
+                            "#5bc0de",
+                            "#5cb85c"
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // bounds helper
+            const bounds = new maplibregl.LngLatBounds();
+
+            function extendBounds(coords) {
+                if (typeof coords[0] === 'number') {
+                    bounds.extend(coords);
+                } else {
+                    coords.forEach(extendBounds);
+                }
+            }
+            features.forEach(f => extendBounds(f.geometry.coordinates));
+
+            // MAP SCORE
+            const mapScore = new maplibregl.Map({
+                container: 'map-score',
+                style: 'https://tiles.openfreemap.org/styles/liberty',
+                center: [11.343, 44.494],
+                zoom: 11
+            });
+
+            mapScore.on('load', () => {
+                mapScore.addSource("areas-score", {
+                    type: "geojson",
+                    data: geojson
+                });
+
+                mapScore.addLayer({
+                    id: "areas-score-fill",
+                    type: "fill",
+                    source: "areas-score",
+                    paint: {
+                        "fill-color": [
+                            "match", ["get", "num_conditions_met"],
+                            0, "#d9534f",
+                            1, "#f0ad4e",
+                            2, "#5bc0de",
+                            3, "#5cb85c",
+                            "#cccccc"
+                        ],
+                        "fill-opacity": 0.7
+                    }
+                });
+
+                mapScore.addLayer({
+                    id: "areas-score-outline",
+                    type: "line",
+                    source: "areas-score",
+                    paint: {
+                        "line-color": "#333333",
+                        "line-width": 0.8
+                    }
+                });
+
+                mapScore.fitBounds(bounds, {
+                    padding: 20
+                });
+            });
+
+            // MAP CANOPY 30
+            const map30 = new maplibregl.Map({
+                container: 'map-criterion30',
+                style: 'https://tiles.openfreemap.org/styles/liberty',
+                center: [11.343, 44.494],
+                zoom: 11
+            });
+
+            map30.on('load', () => {
+                map30.addSource("areas-30", {
+                    type: "geojson",
+                    data: geojson
+                });
+
+                map30.addLayer({
+                    id: "areas-30-fill",
+                    type: "fill",
+                    source: "areas-30",
+                    paint: {
+                        "fill-color": [
+                            "interpolate", ["linear"],
+                            ["get", "perc_canopy_cover_30"],
+                            0, "#f7fbff",
+                            10, "#c6dbef",
+                            30, "#6baed6",
+                            60, "#2171b5",
+                            90, "#08306b"
+                        ],
+                        "fill-opacity": 0.7
+                    }
+                });
+
+                map30.addLayer({
+                    id: "areas-30-outline",
+                    type: "line",
+                    source: "areas-30",
+                    paint: {
+                        "line-color": "#333333",
+                        "line-width": 0.8
+                    }
+                });
+
+                map30.fitBounds(bounds, {
+                    padding: 20
+                });
+            });
         }
-      }
-    }
-  });
 
-  // --- CHART: DISTRIBUZIONE SCORE ---
-  const ctxDist = document.getElementById("chart-distribution").getContext("2d");
-  new Chart(ctxDist, {
-    type: 'bar',
-    data: {
-      labels: ['0','1','2','3'],
-      datasets: [{
-        label: 'Number of areas / Numero di aree',
-        data: [dist[0], dist[1], dist[2], dist[3]],
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: { display: true, text: 'Areas / Aree' }
-        }
-      }
-    }
-  });
-
-  // --- MAPPA ---
-  const map = new maplibregl.Map({
-    container: 'map',
-    style: 'https://demotiles.maplibre.org/style.json',
-    center: [11.343, 44.494],  // approximate Bologna centre
-    zoom: 11
-  });
-
-  map.on('load', () => {
-    map.addSource("areas", { type: "geojson", data: geojson });
-
-    map.addLayer({
-      id: "areas-fill",
-      type: "fill",
-      source: "areas",
-      paint: {
-        "fill-color": [
-          "match",
-          ["get", "num_conditions_met"],
-          0, "#d9534f",
-          1, "#f0ad4e",
-          2, "#5bc0de",
-          3, "#5cb85c",
-          "#cccccc"
-        ],
-        "fill-opacity": 0.7
-      }
-    });
-
-    map.addLayer({
-      id: "areas-outline",
-      type: "line",
-      source: "areas",
-      paint: {
-        "line-color": "#333333",
-        "line-width": 0.8
-      }
-    });
-
-    // zoom automatico sul bounding box delle aree
-    const bounds = new maplibregl.LngLatBounds();
-    features.forEach(f => {
-      f.geometry.coordinates[0].forEach(coord => {
-        bounds.extend(coord);
-      });
-    });
-    map.fitBounds(bounds, { padding: 20 });
-  });
-}
-
-loadData();
-</script>
+        loadData();
+    </script>
 
 </body>
+
 </html>
