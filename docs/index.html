@@ -188,12 +188,47 @@
         #areas-table thead th {
             color: var(--talea-blue);
         }
-        /* Menu di navigazione */
+        /* Navbar / menu hamburger */
         
         .top-nav {
             border-bottom: 1px solid #e5e7f0;
             background-color: #ffffff;
             margin-bottom: 1rem;
+        }
+        
+        .navbar-toggler {
+            border-color: var(--talea-blue);
+        }
+        
+        .navbar-toggler-icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            position: relative;
+        }
+        
+        .navbar-toggler-icon::before,
+        .navbar-toggler-icon::after,
+        .navbar-toggler-icon span {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--talea-blue);
+        }
+        
+        .navbar-toggler-icon::before {
+            top: 0;
+        }
+        
+        .navbar-toggler-icon::after {
+            bottom: 0;
+        }
+        
+        .navbar-toggler-icon span {
+            top: 50%;
+            transform: translateY(-50%);
         }
     </style>
 </head>
@@ -227,29 +262,35 @@
             </div>
         </header>
 
-        <!-- MENU DI NAVIGAZIONE -->
-        <nav class="top-nav">
+        <!-- NAVBAR / MENU HAMBURGER -->
+        <nav class="navbar navbar-expand-md top-nav">
             <div class="container-xl">
-                <ul class="nav nav-pills nav-fill small">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sec-overview" data-i18n="nav.overview"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sec-summary" data-i18n="nav.summary"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sec-charts" data-i18n="nav.charts"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sec-map" data-i18n="nav.map"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sec-table" data-i18n="nav.table"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-project" data-i18n="nav.modal"></a>
-                    </li>
-                </ul>
+                <a class="navbar-brand d-md-none" href="#">3-30-300</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"><span></span></span>
+      </button>
+                <div class="collapse navbar-collapse" id="navbar-menu">
+                    <ul class="navbar-nav ms-auto small">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sec-overview" data-i18n="nav.overview"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sec-summary" data-i18n="nav.summary"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sec-charts" data-i18n="nav.charts"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sec-map" data-i18n="nav.map"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sec-table" data-i18n="nav.table"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-project" data-i18n="nav.modal"></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
 
@@ -914,6 +955,9 @@
                     const t = translations[currentLang];
                     const yes = '<span style="color:#38b850;font-weight:600;">✔</span>';
                     const no = '<span style="color:#d9534f;font-weight:600;">✖</span>';
+                    const canopyVal = (typeof p.perc_canopy_cover_30 === "number") ?
+                        p.perc_canopy_cover_30.toFixed(1) :
+                        p.perc_canopy_cover_30;
                     const html = `
         <strong>${t["popup.name"]}:</strong> ${p.stat_area_name}<br/>
         <strong>${t["popup.id"]}:</strong> ${p.stat_area_id}<br/>
@@ -921,7 +965,7 @@
         <strong>${t["popup.c3"]}:</strong> ${p.meet_3 ? yes : no}<br/>
         <strong>${t["popup.c30"]}:</strong> ${p.meet_30 ? yes : no}<br/>
         <strong>${t["popup.c300"]}:</strong> ${p.meet_300 ? yes : no}<br/>
-        <strong>${t["popup.canopy"]}:</strong> ${p.perc_canopy_cover_30.toFixed ? p.perc_canopy_cover_30.toFixed(1) : p.perc_canopy_cover_30}% 
+        <strong>${t["popup.canopy"]}:</strong> ${canopyVal}% 
       `;
                     popup
                         .setLngLat(e.lngLat)
