@@ -347,7 +347,20 @@
                                 <div class="card-body">
                                     <h3 class="card-title mb-2" data-i18n="summary.score.title"></h3>
                                     <p class="text-muted" data-i18n="summary.score.text"></p>
-                                    <div id="conditions-dist" class="row g-2"></div>
+
+                                    <div class="mb-2 small">
+                                        <span class="me-2"><strong id="score3-pct">--%</strong> 3 ✔</span>
+                                        <span class="me-2"><strong id="score2-pct">--%</strong> 2 ✔</span>
+                                        <span class="me-2"><strong id="score1-pct">--%</strong> 1 ✔</span>
+                                        <span class="me-2"><strong id="score0-pct">--%</strong> 0 ✖</span>
+                                    </div>
+
+                                    <div class="progress" style="height: 20px;">
+                                        <div id="prog-score-3" class="progress-bar" style="background-color: var(--talea-green);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div id="prog-score-2" class="progress-bar" style="background-color: var(--talea-blue);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div id="prog-score-1" class="progress-bar" style="background-color: var(--talea-yellow);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div id="prog-score-0" class="progress-bar" style="background-color: var(--talea-grey);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -474,8 +487,8 @@
                 "chart.perc.text": "Percentage of statistical areas that satisfy each component of the 3-30-300 index.",
                 "chart.dist.title": "Areas by score (0–3)",
                 "chart.dist.text": "Number of areas by how many conditions they meet (from 0 to 3).",
-                "summary.score.title": "Summary by score",
-                "summary.score.text": "Each box shows how many statistical areas satisfy 0, 1, 2 or 3 conditions of the 3-30-300 index.",
+                "summary.score.title": "Distribution of 3-30-300 scores",
+                "summary.score.text": "Proportion of areas by score from 0 to 3. Higher scores mean that more conditions of the 3-30-300 index are met.",
                 "map.tab.score": "Score (0–3)",
                 "map.tab.c3": "Criterion 3",
                 "map.tab.c30": "Criterion 30 (canopy)",
@@ -506,7 +519,14 @@
                 "footer.maintainer": "Maintainer: Maurizio “Napo” Napolitano",
                 "modal.project.title": "About the 3-30-300 project",
                 "modal.project.body": "The 3-30-300 approach links urban greening policies to three simple, measurable conditions: trees close to buildings (3), sufficient canopy coverage (30) and easy access to parks (300). In this project the index is computed on top of open geospatial data to support evidence-informed planning, climate resilience strategies and the evaluation of inequalities in access to urban nature.",
-                "modal.close": "Close"
+                "modal.close": "Close",
+                "popup.name": "Area",
+                "popup.id": "ID",
+                "popup.score": "Score",
+                "popup.c3": "Criterion 3",
+                "popup.c30": "Criterion 30",
+                "popup.c300": "Criterion 300",
+                "popup.canopy": "Canopy"
             },
             it: {
                 "header.brand": "Accessibilità al verde urbano",
@@ -536,8 +556,8 @@
                 "chart.perc.text": "Percentuale di aree statistiche che soddisfa ciascun componente dell’indice 3-30-300.",
                 "chart.dist.title": "Aree per punteggio (0–3)",
                 "chart.dist.text": "Numero di aree in base al numero di condizioni soddisfatte (da 0 a 3).",
-                "summary.score.title": "Sintesi per punteggio",
-                "summary.score.text": "Ogni riquadro mostra quante aree statistiche soddisfano 0, 1, 2 o 3 condizioni dell’indice 3-30-300.",
+                "summary.score.title": "Distribuzione dei punteggi 3-30-300",
+                "summary.score.text": "Quota di aree per punteggio da 0 a 3. Punteggi più alti indicano che sono soddisfatte più condizioni dell’indice 3-30-300.",
                 "map.tab.score": "Punteggio (0–3)",
                 "map.tab.c3": "Criterio 3",
                 "map.tab.c30": "Criterio 30 (canopy)",
@@ -568,7 +588,14 @@
                 "footer.maintainer": "Referente: Maurizio “Napo” Napolitano",
                 "modal.project.title": "Informazioni sul progetto 3-30-300",
                 "modal.project.body": "L’approccio 3-30-300 collega le politiche di inverdimento urbano a tre condizioni semplici e misurabili: alberi vicino agli edifici (3), sufficiente copertura arborea (30) e facile accesso ai parchi (300). In questo progetto l’indice è calcolato a partire da dati geospaziali aperti per supportare la pianificazione basata su evidenze, le strategie di resilienza climatica e la valutazione delle disuguaglianze di accesso alla natura in città.",
-                "modal.close": "Chiudi"
+                "modal.close": "Chiudi",
+                "popup.name": "Area",
+                "popup.id": "ID",
+                "popup.score": "Punteggio",
+                "popup.c3": "Criterio 3",
+                "popup.c30": "Criterio 30",
+                "popup.c300": "Criterio 300",
+                "popup.canopy": "Canopy"
             }
         };
 
@@ -654,17 +681,21 @@
                 if (dist.hasOwnProperty(k)) dist[k] += 1;
             });
 
-            const distDiv = document.getElementById("conditions-dist");
-            Object.keys(dist).forEach(k => {
-                const col = document.createElement("div");
-                col.className = "col-6 col-sm-3";
-                col.innerHTML = `
-      <div class="border rounded p-2 text-center">
-        <div class="h2 mb-0">${dist[k]}</div>
-        <div class="text-muted">C = ${k}</div>
-      </div>`;
-                distDiv.appendChild(col);
-            });
+            const totalAreas = features.length;
+            const pct0 = 100 * dist[0] / totalAreas;
+            const pct1 = 100 * dist[1] / totalAreas;
+            const pct2 = 100 * dist[2] / totalAreas;
+            const pct3 = 100 * dist[3] / totalAreas;
+
+            document.getElementById("score0-pct").textContent = pct0.toFixed(1) + "%";
+            document.getElementById("score1-pct").textContent = pct1.toFixed(1) + "%";
+            document.getElementById("score2-pct").textContent = pct2.toFixed(1) + "%";
+            document.getElementById("score3-pct").textContent = pct3.toFixed(1) + "%";
+
+            document.getElementById("prog-score-0").style.width = pct0 + "%";
+            document.getElementById("prog-score-1").style.width = pct1 + "%";
+            document.getElementById("prog-score-2").style.width = pct2 + "%";
+            document.getElementById("prog-score-3").style.width = pct3 + "%";
 
             // TABLA
             const tbody = document.getElementById("areas-table-body");
@@ -870,6 +901,43 @@
                     padding: 20
                 });
                 updateLegend("score");
+
+                const popup = new maplibregl.Popup({
+                    closeButton: true,
+                    closeOnClick: true
+                });
+
+                function onFeatureClick(e) {
+                    const f = e.features[0];
+                    if (!f) return;
+                    const p = f.properties;
+                    const t = translations[currentLang];
+                    const yes = '<span style="color:#38b850;font-weight:600;">✔</span>';
+                    const no = '<span style="color:#d9534f;font-weight:600;">✖</span>';
+                    const html = `
+        <strong>${t["popup.name"]}:</strong> ${p.stat_area_name}<br/>
+        <strong>${t["popup.id"]}:</strong> ${p.stat_area_id}<br/>
+        <strong>${t["popup.score"]}:</strong> ${p.num_conditions_met}<br/>
+        <strong>${t["popup.c3"]}:</strong> ${p.meet_3 ? yes : no}<br/>
+        <strong>${t["popup.c30"]}:</strong> ${p.meet_30 ? yes : no}<br/>
+        <strong>${t["popup.c300"]}:</strong> ${p.meet_300 ? yes : no}<br/>
+        <strong>${t["popup.canopy"]}:</strong> ${p.perc_canopy_cover_30.toFixed ? p.perc_canopy_cover_30.toFixed(1) : p.perc_canopy_cover_30}% 
+      `;
+                    popup
+                        .setLngLat(e.lngLat)
+                        .setHTML(html)
+                        .addTo(mapMain);
+                }
+
+                ["areas-score-fill", "areas-c3-fill", "areas-c30-fill", "areas-c300-fill"].forEach(layerId => {
+                    mapMain.on("click", layerId, onFeatureClick);
+                    mapMain.on("mouseenter", layerId, () => {
+                        mapMain.getCanvas().style.cursor = "pointer";
+                    });
+                    mapMain.on("mouseleave", layerId, () => {
+                        mapMain.getCanvas().style.cursor = "";
+                    });
+                });
             });
 
             // tabs map
