@@ -12,6 +12,26 @@ This repository provides tools, data, and workflows to compute the **3-30-300 in
 
 The model generates indicators at both building and statistical-area levels, supporting analyses on urban fragility, environmental quality, proximity to green spaces, and climate-adaptation strategies.
 
+
+## Data generated
+3_30_300_stat_areas.csv dataset reports the 3–30–300 indicator for the city of Bologna, aggregated across 90 statistical areas.<br/>
+It includes measures of tree proximity, canopy coverage, and park accessibility, following the 3–30–300 urban greenness framework.<br/>
+
+**Description**
+| column | descriptions|
+|---|---|
+| **stat_area_id** | unique code identifying each statistical area |
+| **stat_area_name** | name of the statistical area |
+|**geometry** |polygon geometry of the area (spatial boundary) expressed in WKT EPSG:32632|
+|**perc_buildings_near_3_trees**|percentage of buildings located near at least three trees|
+|**perc_canopy_cover_30**|percentage of the area covered by tree canopy|
+|**perc_buildings_within_300m_park**|percentage of buildings located within 300 m of a park|
+|**num_conditions_met**|number of 3–30–300 conditions met for the area (0–3)|
+|**meet_3**| boolean variables indicating whether each of the three individual criteria (3, 30, 300) is satisfied (1 = condition met, 0 = not met)|
+|**meet_30**| boolean variables indicating whether each of the three individual criteria (3, 30, 300) is satisfied (1 = condition met, 0 = not met)|
+|**meet_300**|boolean variables indicating whether each of the three individual criteria (3, 30, 300) is satisfied (1 = condition met, 0 = not met)|
+
+
 ## Main Features
 - Extraction of buildings and road networks from OpenStreetMap
 - Calculation of distance between buildings and trees/parks
