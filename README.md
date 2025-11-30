@@ -12,6 +12,9 @@ This repository provides tools, data, and workflows to compute the **3-30-300 in
 
 The model generates indicators at both building and statistical-area levels, supporting analyses on urban fragility, environmental quality, proximity to green spaces, and climate-adaptation strategies.
 
+## Reference
+Evidence-based guidelines for greener, healthier, more resilient neighbourhoods: Introducing the 3–30–300 rule<br/>
+https://link.springer.com/article/10.1007/s11676-022-01523-z
 
 ## Data generated
 3_30_300_stat_areas.csv dataset reports the 3–30–300 indicator for the city of Bologna, aggregated across 90 statistical areas.<br/>
