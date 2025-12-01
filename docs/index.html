@@ -270,7 +270,7 @@
             <div class="card">
               <div class="card-body">
                 <h3 class="card-title mb-2" data-i18n="overview.title"></h3>
-                <p class="text-muted mb-0" data-i18n="overview.text"></p>
+                <p class="text-muted mb-0"><span data-i18n="overview.text"></span>&nbsp;<a href="https://link.springer.com/article/10.1007/s11676-022-01523-z">Evidence-based guidelines for greener, healthier, more resilient neighbourhoods: Introducing the 3–30–300 rule</a></p>
               </div>
             </div>
           </div>
@@ -475,55 +475,88 @@
 <script>
 const translations = {
   en: {
+    /* HEADER */
     "header.brand": "Urban Green Accessibility",
     "header.title": "3-30-300 Index Dashboard",
-    "header.subtitle": "Evidence-based support for climate-resilient and inclusive cities.",
-    "overview.title": "Dashboard overview",
-    "overview.text": "This page offers an interactive exploration of the 3-30-300 index at statistical-area level: summary indicators, charts, maps and a detailed table help understand how urban green is distributed across the city.",
+    "header.subtitle": "Exploring everyday access to urban nature in Bologna.",
+
+    /* OVERVIEW */
+    "overview.title": "3-30-300 in Bologna neighbourhoods",
+    "overview.text":
+      "Here you can explore how the 3-30-300 rule applies to the neighbourhoods of Bologna. “3” is the minimum number of trees that should be visible from a home, “30” is the minimum percentage of green cover in the neighbourhood where the home is located, and “300” is the maximum walking distance to reach a public park. For more details, see the article",
+    /* NAVIGATION */
     "nav.overview": "Overview",
     "nav.summary": "Summary indicators",
     "nav.map": "Maps & charts",
     "nav.table": "Table",
     "nav.modal": "About 3-30-300",
-    "intro.title": "What is the 3-30-300 index?",
-    "intro.p1": "The 3-30-300 index evaluates how each urban statistical area satisfies three key green accessibility criteria:",
-    "intro.li3": "3 – buildings are close to at least three trees.",
-    "intro.li30": "30 – tree canopy coverage reaches at least 30% of the area.",
-    "intro.li300": "300 – most buildings are within 300 m of a park or garden.",
-    "intro.p2": "Indicators are computed at statistical-area level and can support analysis of urban fragility, environmental quality and climate adaptation strategies.",
+
+    /* ABOUT (modal) */
+    "intro.title": "What is the 3-30-300 rule?",
+    "intro.p1":
+      "The 3-30-300 rule describes three basic conditions for everyday access to urban nature from people’s homes:",
+    "intro.li3": "3 – at least three trees should be visible from a home.",
+    "intro.li30":
+      "30 – at least 30% of the neighbourhood area around the home should be covered by trees or other urban green.",
+    "intro.li300":
+      "300 – a public park or garden should be within 300 metres walking distance from the home.",
+    "intro.p2":
+      "Indicators in this dashboard are computed at statistical-area level. Tree visibility and neighbourhood green cover are estimated using Copernicus satellite imagery, combined with open data from the Municipality of Bologna (buildings, statistical areas and public green areas).",
+
     "intro2.title": "How to read this dashboard",
-    "intro2.p": "Summary cards show the share of areas meeting each criterion. Charts describe the distribution of scores from 0 to 3. The map tabs offer different spatial views of the same dataset. The table reports detailed indicators for each statistical area.",
-    "card3.sub": "Criterion 3",
-    "card3.text": "Percentage of areas where a sufficient share of buildings is near at least three trees.",
-    "card30.sub": "Criterion 30",
-    "card30.text": "Percentage of areas with tree canopy coverage greater than or equal to 30%.",
-    "card300.sub": "Criterion 300",
-    "card300.text": "Percentage of areas where most buildings are within 300 m of a park or garden.",
+    "intro2.p":
+      "Summary cards show the share of areas meeting each condition. Charts illustrate the distribution of 3-30-300 scores. The map tabs allow switching between the overall score and the three individual conditions. The table reports detailed values for each statistical area.",
+
+    /* SUMMARY CARDS */
+    "card3.sub": "Condition 3",
+    "card3.text": "Areas where homes have visibility of at least three trees.",
+
+    "card30.sub": "Condition 30",
+    "card30.text": "Areas where at least 30% of the neighbourhood is covered by green.",
+
+    "card300.sub": "Condition 300",
+    "card300.text": "Areas where a public park is reachable within 300 metres.",
+
+    /* CHARTS */
     "chart.perc.title": "Areas meeting 3 / 30 / 300",
     "chart.dist.title": "Areas by score (0–3)",
     "chart.progress.title": "% of areas by score",
+
     "summary.score.title": "Distribution of 3-30-300 scores",
-    "summary.score.text": "The charts below summarise how many conditions of the 3-30-300 index are met in each statistical area and how the three individual criteria contribute.",
+    "summary.score.text":
+      "The charts below show how many of the three 3-30-300 conditions are met in each statistical area, and how the distribution of scores is structured across the city.",
+
+    /* MAP */
     "map.tab.score": "Score (0–3)",
-    "map.tab.c3": "Criterion 3",
-    "map.tab.c30": "Criterion 30 (canopy)",
-    "map.tab.c300": "Criterion 300",
+    "map.tab.c3": "Condition 3",
+    "map.tab.c30": "Condition 30",
+    "map.tab.c300": "Condition 300",
+
     "map.main.title": "Map – 3-30-300 views",
-    "map.main.text": "Use the tabs to switch between the overall score, the 3 condition (trees near buildings), the 30 condition (canopy) and the 300 condition (access to parks). Click on an area to see its indicators.",
+    "map.main.text":
+      "Use the tabs to switch between the 3-30-300 score and the individual conditions (3 trees visible, 30% green cover, 300-metre access to a public park). Click on an area to view detailed indicators.",
     "map.opacity": "Layer opacity",
-    "legend.score.c0": "Score 0 – none of the conditions are met.",
-    "legend.score.c1": "Score 1 – one condition is met.",
-    "legend.score.c2": "Score 2 – two conditions are met.",
-    "legend.score.c3": "Score 3 – all three conditions are met.",
-    "legend.canopy.0": "0–10% canopy",
-    "legend.canopy.1": "10–30% canopy",
-    "legend.canopy.2": "30–60% canopy",
-    "legend.canopy.3": "60–90% canopy",
-    "legend.canopy.4": "90–100% canopy",
-    "legend.c3.yes": "Areas meeting criterion 3",
-    "legend.c3.no": "Areas not meeting criterion 3",
-    "legend.c300.yes": "Areas meeting criterion 300",
-    "legend.c300.no": "Areas not meeting criterion 300",
+
+    /* LEGEND – SCORE */
+    "legend.score.c0": "Score 0 – none of the 3-30-300 conditions are met.",
+    "legend.score.c1": "Score 1 – one 3-30-300 condition is met.",
+    "legend.score.c2": "Score 2 – two 3-30-300 conditions are met.",
+    "legend.score.c3": "Score 3 – all three 3-30-300 conditions are met.",
+
+    /* LEGEND – CANOPY */
+    "legend.canopy.0": "0–10% green cover",
+    "legend.canopy.1": "10–30% green cover",
+    "legend.canopy.2": "30–60% green cover",
+    "legend.canopy.3": "60–90% green cover",
+    "legend.canopy.4": "90–100% green cover",
+
+    /* LEGEND – BINARY CONDITIONS */
+    "legend.c3.yes": "Condition 3 met",
+    "legend.c3.no": "Condition 3 not met",
+    "legend.c300.yes": "Condition 300 met",
+    "legend.c300.no": "Condition 300 not met",
+
+    /* TABLE */
     "table.title": "Indicators by statistical area",
     "table.h.id": "ID",
     "table.h.area": "Area",
@@ -531,73 +564,118 @@ const translations = {
     "table.h.c30": "30",
     "table.h.c300": "300",
     "table.h.score": "Score",
-    "table.legend.3": "buildings near ≥3 trees",
-    "table.legend.30": "canopy cover ≥30% of area",
-    "table.legend.300": "most buildings within 300 m of a park or garden",
-    "table.legend.yes": "criterion met",
-    "table.legend.no": "criterion not met",
-    "footer.text": "Dashboard for exploratory analysis of the 3-30-300 index at statistical-area level. Data and code are provided for research, planning and public discussion.",
+
+    "table.legend.3": "≥3 trees visible",
+    "table.legend.30": "≥30% green cover",
+    "table.legend.300": "≤300 m to public park",
+    "table.legend.yes": "condition met",
+    "table.legend.no": "condition not met",
+
+    /* FOOTER */
+    "footer.text":
+      "Dashboard for exploring the 3-30-300 rule in Bologna using satellite data and municipal open data.",
     "footer.maintainer": "Talea Project",
-    "modal.project.title": "About the 3-30-300 index and this dashboard",
+
+    /* MODAL */
+    "modal.project.title": "About the 3-30-300 rule",
     "modal.close": "Close",
+
+    /* POPUP */
     "popup.name": "Area",
     "popup.id": "ID",
     "popup.score": "Score",
-    "popup.c3": "Criterion 3",
-    "popup.c30": "Criterion 30",
-    "popup.c300": "Criterion 300",
-    "popup.canopy": "Canopy"
+    "popup.c3": "Condition 3",
+    "popup.c30": "Condition 30",
+    "popup.c300": "Condition 300",
+    "popup.canopy": "Green cover"
   },
+
+  /* ---------------------------------------------------------------------------------------- */
+
   it: {
+    /* HEADER */
     "header.brand": "Accessibilità al verde urbano",
     "header.title": "Dashboard indice 3-30-300",
-    "header.subtitle": "Supporto alla transizione verde urbana e alla resilienza climatica basato su dati.",
-    "overview.title": "Panoramica della dashboard",
-    "overview.text": "Questa pagina offre un’esplorazione interattiva dell’indice 3-30-300 a livello di area statistica: indicatori di sintesi, grafici, mappe e una tabella di dettaglio aiutano a capire come il verde urbano è distribuito nella città.",
+    "header.subtitle": "Esplorare l’accesso quotidiano alla natura urbana a Bologna.",
+
+    /* OVERVIEW */
+    "overview.title": "La regola 3-30-300 nei quartieri di Bologna",
+    "overview.text":
+      "Qui puoi scoprire la regola del 3-30-300 nei quartieri della città di Bologna. “3” è il numero minimo di alberi visibili da un’abitazione, “30” è la percentuale minima di verde dell’area del quartiere dove si trova la casa e “300” è la distanza massima in metri per raggiungere un parco pubblico. Per saperne di più, leggi l’articolo",
+
+    /* NAVIGATION */
     "nav.overview": "Panoramica",
     "nav.summary": "Indicatori di sintesi",
     "nav.map": "Mappe e grafici",
     "nav.table": "Tabella",
     "nav.modal": "Informazioni 3-30-300",
-    "intro.title": "Cos’è l’indice 3-30-300?",
-    "intro.p1": "L’indice 3-30-300 valuta quanto ogni area statistica urbana soddisfa tre criteri chiave di accessibilità al verde:",
-    "intro.li3": "3 – edifici in prossimità di almeno tre alberi.",
-    "intro.li30": "30 – copertura arborea pari ad almeno il 30% dell’area.",
-    "intro.li300": "300 – la maggior parte degli edifici si trova entro 300 m da un parco o giardino.",
-    "intro.p2": "Gli indicatori sono calcolati a livello di area statistica e possono supportare analisi su fragilità urbana, qualità ambientale e strategie di adattamento climatico.",
+
+    /* ABOUT (modal) */
+    "intro.title": "Che cos’è la regola 3-30-300?",
+    "intro.p1":
+      "La regola 3-30-300 descrive tre condizioni fondamentali per l’accesso quotidiano al verde urbano a partire dalle abitazioni:",
+    "intro.li3": "3 – da ogni abitazione dovrebbero essere visibili almeno tre alberi.",
+    "intro.li30":
+      "30 – almeno il 30% del quartiere in cui si trova la casa dovrebbe essere coperto da alberi o altro verde urbano.",
+    "intro.li300":
+      "300 – un parco o giardino pubblico dovrebbe trovarsi entro 300 metri di distanza a piedi dall’abitazione.",
+    "intro.p2":
+      "Gli indicatori sono calcolati a livello di area statistica. La visibilità degli alberi e la copertura verde del quartiere sono stimate tramite immagini satellitari Copernicus, combinate con gli open data del Comune di Bologna (edifici, aree statistiche e aree verdi pubbliche).",
+
     "intro2.title": "Come leggere questa dashboard",
-    "intro2.p": "Le card di sintesi mostrano la quota di aree che soddisfa ciascun criterio. I grafici descrivono la distribuzione dei punteggi da 0 a 3. Le tab della mappa offrono diverse viste spaziali sullo stesso dataset. La tabella riporta gli indicatori di dettaglio per ogni area statistica.",
-    "card3.sub": "Criterio 3",
-    "card3.text": "Percentuale di aree in cui una quota sufficiente di edifici è vicina ad almeno tre alberi.",
-    "card30.sub": "Criterio 30",
-    "card30.text": "Percentuale di aree con copertura arborea maggiore o uguale al 30%.",
-    "card300.sub": "Criterio 300",
-    "card300.text": "Percentuale di aree in cui la maggior parte degli edifici è entro 300 m da un parco o giardino.",
+    "intro2.p":
+      "Le card di sintesi mostrano la quota di aree che soddisfa ciascuna condizione. I grafici illustrano la distribuzione dei punteggi 3-30-300. Le tab della mappa permettono di passare dal punteggio complessivo alle tre condizioni. La tabella riporta i valori dettagliati per ogni area statistica.",
+
+    /* SUMMARY CARDS */
+    "card3.sub": "Condizione 3",
+    "card3.text": "Aree in cui dalle abitazioni sono visibili almeno tre alberi.",
+
+    "card30.sub": "Condizione 30",
+    "card30.text": "Aree in cui almeno il 30% del quartiere è coperto da verde.",
+
+    "card300.sub": "Condizione 300",
+    "card300.text": "Aree in cui un parco pubblico è raggiungibile entro 300 metri.",
+
+    /* CHARTS */
     "chart.perc.title": "Aree che soddisfano 3 / 30 / 300",
     "chart.dist.title": "Aree per punteggio (0–3)",
     "chart.progress.title": "% di aree per punteggio",
+
     "summary.score.title": "Distribuzione dei punteggi 3-30-300",
-    "summary.score.text": "I grafici sottostanti riassumono quante condizioni dell’indice 3-30-300 sono soddisfatte in ciascuna area statistica e come contribuiscono i tre criteri.",
+    "summary.score.text":
+      "I grafici sottostanti mostrano quante delle tre condizioni della regola 3-30-300 sono soddisfatte in ciascuna area statistica e come si distribuiscono i punteggi nella città.",
+
+    /* MAP */
     "map.tab.score": "Punteggio (0–3)",
-    "map.tab.c3": "Criterio 3",
-    "map.tab.c30": "Criterio 30 (canopy)",
-    "map.tab.c300": "Criterio 300",
+    "map.tab.c3": "Condizione 3",
+    "map.tab.c30": "Condizione 30",
+    "map.tab.c300": "Condizione 300",
+
     "map.main.title": "Mappa – viste dell’indice 3-30-300",
-    "map.main.text": "Utilizza le tab per passare dalla vista sul punteggio complessivo alle singole condizioni 3 (alberi vicino agli edifici), 30 (canopy) e 300 (accesso ai parchi). Clicca su un’area per vedere i relativi indicatori.",
+    "map.main.text":
+      "Utilizza le tab per passare dal punteggio complessivo 3-30-300 alle tre condizioni (3 alberi visibili, 30% di verde nel quartiere, 300 metri per raggiungere un parco pubblico). Clicca su un’area per visualizzarne gli indicatori.",
     "map.opacity": "Trasparenza layer",
-    "legend.score.c0": "Punteggio 0 – nessuna condizione soddisfatta.",
-    "legend.score.c1": "Punteggio 1 – una condizione soddisfatta.",
-    "legend.score.c2": "Punteggio 2 – due condizioni soddisfatte.",
-    "legend.score.c3": "Punteggio 3 – tutte e tre le condizioni soddisfatte.",
-    "legend.canopy.0": "0–10% canopy",
-    "legend.canopy.1": "10–30% canopy",
-    "legend.canopy.2": "30–60% canopy",
-    "legend.canopy.3": "60–90% canopy",
-    "legend.canopy.4": "90–100% canopy",
-    "legend.c3.yes": "Aree che soddisfano il criterio 3",
-    "legend.c3.no": "Aree che non soddisfano il criterio 3",
-    "legend.c300.yes": "Aree che soddisfano il criterio 300",
-    "legend.c300.no": "Aree che non soddisfano il criterio 300",
+
+    /* LEGEND – SCORE */
+    "legend.score.c0": "Punteggio 0 – nessuna delle condizioni 3-30-300 è soddisfatta.",
+    "legend.score.c1": "Punteggio 1 – una delle condizioni 3-30-300 è soddisfatta.",
+    "legend.score.c2": "Punteggio 2 – due delle condizioni 3-30-300 sono soddisfatte.",
+    "legend.score.c3": "Punteggio 3 – tutte e tre le condizioni 3-30-300 sono soddisfatte.",
+
+    /* LEGEND – CANOPY */
+    "legend.canopy.0": "0–10% copertura verde",
+    "legend.canopy.1": "10–30% copertura verde",
+    "legend.canopy.2": "30–60% copertura verde",
+    "legend.canopy.3": "60–90% copertura verde",
+    "legend.canopy.4": "90–100% copertura verde",
+
+    /* LEGEND – BINARY */
+    "legend.c3.yes": "Condizione 3 soddisfatta",
+    "legend.c3.no": "Condizione 3 non soddisfatta",
+    "legend.c300.yes": "Condizione 300 soddisfatta",
+    "legend.c300.no": "Condizione 300 non soddisfatta",
+
+    /* TABLE */
     "table.title": "Indicatori per area statistica",
     "table.h.id": "ID",
     "table.h.area": "Area",
@@ -605,24 +683,33 @@ const translations = {
     "table.h.c30": "30",
     "table.h.c300": "300",
     "table.h.score": "Punteggio",
-    "table.legend.3": "edifici vicini a ≥3 alberi",
-    "table.legend.30": "canopy ≥30% dell’area",
-    "table.legend.300": "maggior parte degli edifici entro 300 m da un parco o giardino",
-    "table.legend.yes": "criterio soddisfatto",
-    "table.legend.no": "criterio non soddisfatto",
-    "footer.text": "Dashboard per l’analisi esplorativa dell’indice 3-30-300 a livello di area statistica. Dati e codice sono forniti per ricerca, pianificazione e discussione pubblica.",
+
+    "table.legend.3": "≥3 alberi visibili",
+    "table.legend.30": "≥30% copertura verde",
+    "table.legend.300": "≤300 m da un parco pubblico",
+    "table.legend.yes": "condizione soddisfatta",
+    "table.legend.no": "condizione non soddisfatta",
+
+    /* FOOTER */
+    "footer.text":
+      "Dashboard per esplorare la regola 3-30-300 a Bologna tramite immagini satellitari e open data comunali.",
     "footer.maintainer": "Talea Project",
-    "modal.project.title": "Informazioni sull’indice 3-30-300 e sulla dashboard",
+
+    /* MODAL */
+    "modal.project.title": "Informazioni sulla regola 3-30-300",
     "modal.close": "Chiudi",
+
+    /* POPUP */
     "popup.name": "Area",
     "popup.id": "ID",
     "popup.score": "Punteggio",
-    "popup.c3": "Criterio 3",
-    "popup.c30": "Criterio 30",
-    "popup.c300": "Criterio 300",
-    "popup.canopy": "Canopy"
+    "popup.c3": "Condizione 3",
+    "popup.c30": "Condizione 30",
+    "popup.c300": "Condizione 300",
+    "popup.canopy": "Copertura verde"
   }
 };
+
 
 let currentLang = "en";
 let mapMain = null;
@@ -737,38 +824,35 @@ async function loadData() {
 
   const taleaGreen = "#38b850";
 
-// chart-percentages
-const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
-new Chart(ctxPerc, {
-  type: 'bar',
-  data: {
-    labels: ['3', '30', '300'],
-    datasets: [{
-      data: [p3, p30, p300],
-      // stesse tinte usate nella mappa:
-      // giallo (1 condizione), blu (2), verde (3)
-      backgroundColor: [
-        '#f7e91a', // 3
-        '#3673c0', // 30
-        '#38b850'  // 300
-      ]
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { callback: v => v + '%' }
-      },
-      x: { grid: { display: false } }
+  // chart-percentages (colori coerenti con mappa: giallo / blu / verde)
+  const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
+  new Chart(ctxPerc, {
+    type: 'bar',
+    data: {
+      labels: ['3', '30', '300'],
+      datasets: [{
+        data: [p3, p30, p300],
+        backgroundColor: [
+          '#f7e91a', // 3
+          '#3673c0', // 30
+          '#38b850'  // 300
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v + '%' }
+        },
+        x: { grid: { display: false } }
+      }
     }
-  }
-});
+  });
 
-
-  // chart-distribution
+  // chart-distribution (sempre verde talea)
   const ctxDist = document.getElementById("chart-distribution").getContext("2d");
   new Chart(ctxDist, {
     type: 'bar',
@@ -1023,3 +1107,4 @@ loadData();
 
 </body>
 </html>
+
