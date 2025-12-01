@@ -1,760 +1,723 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <title>3-30-300 Index Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <title>3-30-300 Index Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <!-- Tabler CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler-vendors.min.css" rel="stylesheet" />
+  <!-- Tabler CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler-vendors.min.css" rel="stylesheet"/>
 
-    <!-- MapLibre -->
-    <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <!-- jQuery + DataTables -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+  <!-- jQuery + DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css"/>
+  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
 
-    <style>
-         :root {
-            /* Colori Talea (adattati dal logo) */
-            --talea-green-dark: #17361c;
-            --talea-blue: #3673c0;
-            --talea-green: #38b850;
-            --talea-yellow: #f7e91a;
-            --talea-grey: #d1d1d1;
-        }
-        
-        body {
-            background-color: #f5f7fb;
-        }
-        
-        .page-header {
-            background: #ffffff;
-            color: var(--talea-green-dark);
-            padding: 1.5rem 0 1.25rem 0;
-            margin-bottom: 0.5rem;
-            border-bottom: 3px solid var(--talea-green);
-        }
-        
-        .page-header .navbar-brand-text {
-            color: var(--talea-blue);
-            font-weight: 600;
-            letter-spacing: .03em;
-            text-transform: uppercase;
-            font-size: .9rem;
-        }
-        
-        .page-header-subtitle {
-            font-size: .95rem;
-            opacity: .9;
-        }
-        
-        .header-logo {
-            height: 60px;
-            margin-right: 0.75rem;
-        }
-        
-        #map-main {
-            width: 100%;
-            height: 420px;
-            border-radius: 10px;
-        }
-        
-        footer {
-            border-top: 1px solid #e5e7f0;
-            margin-top: 2rem;
-            padding: 1.5rem 0;
-            font-size: .8rem;
-            color: #6c757d;
-        }
-        
-        .legend {
-            margin-top: .75rem;
-            font-size: .8rem;
-        }
-        
-        .legend-item {
-            display: inline-flex;
-            align-items: center;
-            margin-right: .75rem;
-        }
-        
-        .legend-color {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
-            margin-right: .35rem;
-            border: 1px solid #ccc;
-        }
-        /* Score 0–3: palette Talea + grigio */
-        
-        .legend-color.score-0 {
-            background-color: var(--talea-grey);
-        }
-        
-        .legend-color.score-1 {
-            background-color: var(--talea-yellow);
-        }
-        
-        .legend-color.score-2 {
-            background-color: var(--talea-blue);
-        }
-        
-        .legend-color.score-3 {
-            background-color: var(--talea-green);
-        }
-        /* Canopy: sfumature di verde */
-        
-        .legend-color.canopy-0 {
-            background-color: #f7fcf5;
-        }
-        
-        .legend-color.canopy-1 {
-            background-color: #e5f5e0;
-        }
-        
-        .legend-color.canopy-2 {
-            background-color: #a1d99b;
-        }
-        
-        .legend-color.canopy-3 {
-            background-color: #31a354;
-        }
-        
-        .legend-color.canopy-4 {
-            background-color: #006d2c;
-        }
-        /* Binario 3 / 300 */
-        
-        .legend-color.bin-yes {
-            background-color: var(--talea-green);
-        }
-        
-        .legend-color.bin-no {
-            background-color: var(--talea-grey);
-        }
-        
-        .card {
-            border: 1px solid var(--talea-yellow);
-        }
-        
-        .card-title {
-            color: var(--talea-blue);
-        }
-        
-        .subheader {
-            color: var(--talea-blue);
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            font-size: .75rem;
-            font-weight: 600;
-        }
-        
-        .btn-lang {
-            border-color: var(--talea-blue);
-            color: var(--talea-blue);
-            background-color: #ffffff;
-        }
-        
-        .btn-lang.active {
-            background-color: var(--talea-blue);
-            color: #ffffff;
-        }
-        /* Valori tabella colorati */
-        
-        .val-yes {
-            color: var(--talea-green);
-            font-weight: 600;
-        }
-        
-        .val-no {
-            color: #d9534f;
-            font-weight: 600;
-        }
-        /* DataTables + Tabler */
-        
-        table.dataTable tbody tr:hover {
-            background-color: #f0f4ff;
-        }
-        
-        #areas-table thead th {
-            color: var(--talea-blue);
-        }
-        /* Navbar / menu hamburger */
-        
-        .top-nav {
-            border-bottom: 1px solid #e5e7f0;
-            background-color: #ffffff;
-            margin-bottom: 1rem;
-        }
-        
-        .navbar-toggler {
-            border-color: var(--talea-blue);
-        }
-        
-        .navbar-toggler-icon {
-            display: inline-block;
-            width: 1.5em;
-            height: 1.5em;
-            position: relative;
-        }
-        
-        .navbar-toggler-icon::before,
-        .navbar-toggler-icon::after,
-        .navbar-toggler-icon span {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--talea-blue);
-        }
-        
-        .navbar-toggler-icon::before {
-            top: 0;
-        }
-        
-        .navbar-toggler-icon::after {
-            bottom: 0;
-        }
-        
-        .navbar-toggler-icon span {
-            top: 50%;
-            transform: translateY(-50%);
-        }
-    </style>
+  <style>
+    :root {
+      --talea-green-dark: #17361c;
+      --talea-blue: #3673c0;
+      --talea-green: #38b850;
+      --talea-yellow: #f7e91a;
+      --talea-grey: #d1d1d1;
+    }
+
+    body { background-color: #f5f7fb; }
+
+    .page-header {
+      background: #ffffff;
+      color: var(--talea-green-dark);
+      padding: 1.5rem 0 1.25rem 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 3px solid var(--talea-green);
+    }
+
+    .page-header .navbar-brand-text {
+      color: var(--talea-blue);
+      font-weight: 600;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      font-size: .9rem;
+    }
+
+    .page-header-subtitle {
+      font-size: .95rem;
+      opacity: .9;
+    }
+
+    .header-logo {
+      height: 60px;
+      margin-right: 0.75rem;
+    }
+
+    #map-main {
+      width: 100%;
+      height: 420px;
+      border-radius: 10px;
+    }
+
+    footer {
+      border-top: 1px solid #e5e7f0;
+      margin-top: 2rem;
+      padding: 1.5rem 0;
+      font-size: .8rem;
+      color: #6c757d;
+    }
+
+    /* Legenda mappa orizzontale */
+    .legend {
+      margin-top: .75rem;
+      font-size: .8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem .75rem;
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+    }
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      margin-right: .35rem;
+      border: 1px solid #ccc;
+    }
+
+    /* Palette legenda */
+    .legend-color.score-0 { background-color: var(--talea-grey); }
+    .legend-color.score-1 { background-color: var(--talea-yellow); }
+    .legend-color.score-2 { background-color: var(--talea-blue); }
+    .legend-color.score-3 { background-color: var(--talea-green); }
+
+    .legend-color.canopy-0 { background-color: #f7fcf5; }
+    .legend-color.canopy-1 { background-color: #e5f5e0; }
+    .legend-color.canopy-2 { background-color: #a1d99b; }
+    .legend-color.canopy-3 { background-color: #31a354; }
+    .legend-color.canopy-4 { background-color: #006d2c; }
+
+    .legend-color.bin-yes { background-color: var(--talea-green); }
+    .legend-color.bin-no  { background-color: var(--talea-grey); }
+
+    .card {
+      border: 1px solid var(--talea-yellow);
+    }
+
+    .card-title {
+      color: var(--talea-blue);
+    }
+
+    .subheader {
+      color: var(--talea-blue);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+
+    .btn-lang {
+      border-color: var(--talea-blue);
+      color: var(--talea-blue);
+      background-color: #ffffff;
+    }
+    .btn-lang.active {
+      background-color: var(--talea-blue);
+      color: #ffffff;
+    }
+
+    .val-yes {
+      color: var(--talea-green);
+      font-weight: 600;
+    }
+    .val-no {
+      color: #d9534f;
+      font-weight: 600;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f4ff;
+    }
+    #areas-table thead th {
+      color: var(--talea-blue);
+    }
+
+    .table-legend {
+      font-size: .75rem;
+      margin-top: .25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .table-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+
+    .top-nav {
+      border-bottom: 1px solid #e5e7f0;
+      background-color: #ffffff;
+      margin-bottom: 1rem;
+    }
+    .navbar-toggler {
+      border-color: var(--talea-blue);
+    }
+    .navbar-toggler-icon {
+      display: inline-block;
+      width: 1.5em;
+      height: 1.5em;
+      position: relative;
+    }
+    .navbar-toggler-icon::before,
+    .navbar-toggler-icon::after,
+    .navbar-toggler-icon span {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--talea-blue);
+    }
+    .navbar-toggler-icon::before { top: 0; }
+    .navbar-toggler-icon::after { bottom: 0; }
+    .navbar-toggler-icon span {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Chart sizing */
+    .chart-container {
+      width: 100%;
+      height: 180px;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="page">
+<div class="page">
 
-        <!-- HEADER -->
-        <header class="page-header">
-            <div class="container-xl">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center mb-1">
-                            <img src="assets/talea-logo.svg" alt="Talea logo" class="header-logo">
-                            <div>
-                                <div class="navbar-brand mb-0">
-                                    <span class="navbar-brand-text" data-i18n="header.brand"></span>
-                                </div>
-                                <h1 class="h2 mb-0" data-i18n="header.title"></h1>
-                            </div>
-                        </div>
-                        <p class="page-header-subtitle mb-0" data-i18n="header.subtitle"></p>
-                    </div>
-                    <div class="text-end">
-                        <div class="btn-group" role="group" aria-label="Language switch">
-                            <button id="lang-en" class="btn btn-sm btn-lang active" type="button">🇬🇧 EN</button>
-                            <button id="lang-it" class="btn btn-sm btn-lang" type="button">🇮🇹 IT</button>
-                        </div>
-                    </div>
-                </div>
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="container-xl">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="d-flex align-items-center mb-1">
+            <img src="assets/talea-logo.svg" alt="Talea logo" class="header-logo">
+            <div>
+              <div class="navbar-brand mb-0">
+                <span class="navbar-brand-text" data-i18n="header.brand"></span>
+              </div>
+              <h1 class="h2 mb-0" data-i18n="header.title"></h1>
             </div>
-        </header>
+          </div>
+          <p class="page-header-subtitle mb-0" data-i18n="header.subtitle"></p>
+        </div>
+        <div class="text-end">
+          <div class="btn-group" role="group" aria-label="Language switch">
+            <button id="lang-en" class="btn btn-sm btn-lang active" type="button">🇬🇧 EN</button>
+            <button id="lang-it" class="btn btn-sm btn-lang" type="button">🇮🇹 IT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-        <!-- NAVBAR / MENU HAMBURGER -->
-        <nav class="navbar navbar-expand-md top-nav">
-            <div class="container-xl">
-                <a class="navbar-brand d-md-none" href="#">3-30-300</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+  <!-- NAVBAR / HAMBURGER -->
+  <nav class="navbar navbar-expand-md top-nav">
+    <div class="container-xl">
+      <a class="navbar-brand d-md-none" href="#">3-30-300</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
+              aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"><span></span></span>
       </button>
-                <div class="collapse navbar-collapse" id="navbar-menu">
-                    <ul class="navbar-nav ms-auto small">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sec-overview" data-i18n="nav.overview"></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sec-summary" data-i18n="nav.summary"></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sec-charts" data-i18n="nav.charts"></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sec-map" data-i18n="nav.map"></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sec-table" data-i18n="nav.table"></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-project" data-i18n="nav.modal"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <div class="page-wrapper">
-            <div class="page-body">
-                <div class="container-xl">
-
-                    <!-- INTRO -->
-                    <div id="sec-overview" class="row row-cards mb-3">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-2" data-i18n="intro.title"></h3>
-                                    <p class="text-muted mb-2" data-i18n="intro.p1"></p>
-                                    <ul class="text-muted mb-2">
-                                        <li data-i18n="intro.li3"></li>
-                                        <li data-i18n="intro.li30"></li>
-                                        <li data-i18n="intro.li300"></li>
-                                    </ul>
-				    <p class="text-muted mb-0" data-i18n="intro.p2"></p><br/>
-				    <p class="text-muted mb-0"><span data-i18n="intro.p2ref"></span><br/>
-				    	<a href="https://link.springer.com/article/10.1007/s11676-022-01523-z">
-					    Evidence-based guidelines for greener, healthier, more resilient neighbourhoods: Introducing the 3–30–300 rule
-					</a>
-				    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-2" data-i18n="intro2.title"></h3>
-                                    <p class="text-muted mb-0" data-i18n="intro2.p"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SUMMARY CARDS -->
-                    <div id="sec-summary" class="row row-cards">
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="subheader" data-i18n="card3.sub"></div>
-                                    <div class="h1 mb-1" id="summary-3">-- %</div>
-                                    <p class="text-muted mb-0" data-i18n="card3.text"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="subheader" data-i18n="card30.sub"></div>
-                                    <div class="h1 mb-1" id="summary-30">-- %</div>
-                                    <p class="text-muted mb-0" data-i18n="card30.text"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="subheader" data-i18n="card300.sub"></div>
-                                    <div class="h1 mb-1" id="summary-300">-- %</div>
-                                    <p class="text-muted mb-0" data-i18n="card300.text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CHARTS -->
-                    <div id="sec-charts" class="row row-cards mt-3">
-                        <div class="col-md-6">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-1" data-i18n="chart.perc.title"></h3>
-                                    <p class="text-muted mb-2" data-i18n="chart.perc.text"></p>
-                                    <canvas id="chart-percentages" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-1" data-i18n="chart.dist.title"></h3>
-                                    <p class="text-muted mb-2" data-i18n="chart.dist.text"></p>
-                                    <canvas id="chart-distribution" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SCORE SUMMARY + MAP (TABS) -->
-                    <div id="sec-map" class="row row-cards mt-3">
-                        <div class="col-md-5">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="card-title mb-2" data-i18n="summary.score.title"></h3>
-                                    <p class="text-muted" data-i18n="summary.score.text"></p>
-
-                                    <div class="mb-2 small">
-                                        <span class="me-2"><strong id="score3-pct">--%</strong> 3 ✔</span>
-                                        <span class="me-2"><strong id="score2-pct">--%</strong> 2 ✔</span>
-                                        <span class="me-2"><strong id="score1-pct">--%</strong> 1 ✔</span>
-                                        <span class="me-2"><strong id="score0-pct">--%</strong> 0 ✖</span>
-                                    </div>
-
-                                    <div class="progress" style="height: 20px;">
-                                        <div id="prog-score-3" class="progress-bar" style="background-color: var(--talea-green);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                        <div id="prog-score-2" class="progress-bar" style="background-color: var(--talea-blue);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                        <div id="prog-score-1" class="progress-bar" style="background-color: var(--talea-yellow);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                        <div id="prog-score-0" class="progress-bar" style="background-color: var(--talea-grey);" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-7">
-                            <div class="card h-100">
-                                <ul class="nav nav-tabs" id="map-tabs">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="#" data-map-mode="score" data-i18n="map.tab.score"></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" data-map-mode="c3" data-i18n="map.tab.c3"></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" data-map-mode="c30" data-i18n="map.tab.c30"></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#" data-map-mode="c300" data-i18n="map.tab.c300"></a>
-                                    </li>
-                                </ul>
-                                <div class="card-body">
-                                    <h3 class="card-title mb-2" data-i18n="map.main.title"></h3>
-                                    <p class="text-muted mb-2" data-i18n="map.main.text"></p>
-                                    <div id="map-main"></div>
-                                    <div id="map-legend" class="legend"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TABLE -->
-                    <div id="sec-table" class="row row-cards mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title" data-i18n="table.title"></h3>
-                                </div>
-                                <div class="table-responsive">
-                                    <table id="areas-table" class="table table-vcenter card-table display">
-                                        <thead>
-                                            <tr>
-                                                <th data-i18n="table.h.id"></th>
-                                                <th data-i18n="table.h.area"></th>
-                                                <th data-i18n="table.h.c3"></th>
-                                                <th data-i18n="table.h.c30"></th>
-                                                <th data-i18n="table.h.c300"></th>
-                                                <th data-i18n="table.h.score"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="areas-table-body"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FOOTER -->
-                    <footer>
-                        <div class="container-xl">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <span data-i18n="footer.text"></span>
-                                </div>
-                                <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                                    <span data-i18n="footer.maintainer"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-
-                </div>
-            </div>
-        </div>
+      <div class="collapse navbar-collapse" id="navbar-menu">
+        <ul class="navbar-nav ms-auto small">
+          <li class="nav-item">
+            <a class="nav-link" href="#sec-overview" data-i18n="nav.overview"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#sec-summary" data-i18n="nav.summary"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#sec-map" data-i18n="nav.map"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#sec-table" data-i18n="nav.table"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-project" data-i18n="nav.modal"></a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- MODAL PROGETTO 3-30-300 -->
-    <div class="modal modal-blur fade" id="modal-project" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-i18n="modal.project.title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted" data-i18n="modal.project.body"></p>
-		    <p class="text-muted"><span data-i18n="modal.project.ref"></span><br/>
-		    <a href='https://link.springer.com/article/10.1007/s11676-022-01523-z'>Evidence-based guidelines for greener, healthier, more resilient neighbourhoods: Introducing the 3–30–300 rule</a>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" data-bs-dismiss="modal" type="button" data-i18n="modal.close"></button>
-                </div>
+  <div class="page-wrapper">
+    <div class="page-body">
+      <div class="container-xl">
+
+        <!-- OVERVIEW -->
+        <div id="sec-overview" class="row row-cards mb-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title mb-2" data-i18n="overview.title"></h3>
+                <p class="text-muted mb-0" data-i18n="overview.text"></p>
+              </div>
             </div>
+          </div>
         </div>
+
+        <!-- SUMMARY CARDS -->
+        <div id="sec-summary" class="row row-cards">
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="subheader" data-i18n="card3.sub"></div>
+                <div class="h1 mb-1" id="summary-3">-- %</div>
+                <p class="text-muted mb-0" data-i18n="card3.text"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="subheader" data-i18n="card30.sub"></div>
+                <div class="h1 mb-1" id="summary-30">-- %</div>
+                <p class="text-muted mb-0" data-i18n="card30.text"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="subheader" data-i18n="card300.sub"></div>
+                <div class="h1 mb-1" id="summary-300">-- %</div>
+                <p class="text-muted mb-0" data-i18n="card300.text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 1: TRE BARCHART (AFFIANCATI) -->
+        <div id="sec-map" class="row row-cards mt-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title mb-2" data-i18n="summary.score.title"></h3>
+                <p class="text-muted" data-i18n="summary.score.text"></p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <h4 class="card-title mb-1" style="font-size:.9rem;" data-i18n="chart.perc.title"></h4>
+                    <canvas id="chart-percentages" class="chart-container"></canvas>
+                  </div>
+                  <div class="col-md-4">
+                    <h4 class="card-title mb-1" style="font-size:.9rem;" data-i18n="chart.dist.title"></h4>
+                    <canvas id="chart-distribution" class="chart-container"></canvas>
+                  </div>
+                  <div class="col-md-4">
+                    <h4 class="card-title mb-1" style="font-size:.9rem;" data-i18n="chart.progress.title"></h4>
+                    <canvas id="progress" class="chart-container"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: MAPPA SOTTO I GRAFICI -->
+          <div class="col-12 mt-3">
+            <div class="card">
+              <ul class="nav nav-tabs" id="map-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#" data-map-mode="score" data-i18n="map.tab.score"></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-map-mode="c3" data-i18n="map.tab.c3"></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-map-mode="c30" data-i18n="map.tab.c30"></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-map-mode="c300" data-i18n="map.tab.c300"></a>
+                </li>
+              </ul>
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                  <label for="opacity-range" class="me-2 small text-muted" data-i18n="map.opacity"></label>
+                  <input type="range" id="opacity-range" min="10" max="100" value="70">
+                </div>
+                <h3 class="card-title mb-2" data-i18n="map.main.title"></h3>
+                <p class="text-muted mb-2" data-i18n="map.main.text"></p>
+                <div id="map-main"></div>
+                <div id="map-legend" class="legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: TABELLA SOTTO LA MAPPA -->
+        <div id="sec-table" class="row row-cards mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title" data-i18n="table.title"></h3>
+                  <div class="table-legend">
+                    <span class="table-legend-item">
+                      <strong>3</strong>
+                      <span data-i18n="table.legend.3"></span>
+                    </span>
+                    <span class="table-legend-item">
+                      <strong>30</strong>
+                      <span data-i18n="table.legend.30"></span>
+                    </span>
+                    <span class="table-legend-item">
+                      <strong>300</strong>
+                      <span data-i18n="table.legend.300"></span>
+                    </span>
+                    <span class="table-legend-item">
+                      <span class="val-yes">✔</span>
+                      <span data-i18n="table.legend.yes"></span>
+                    </span>
+                    <span class="table-legend-item">
+                      <span class="val-no">✖</span>
+                      <span data-i18n="table.legend.no"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table id="areas-table" class="table table-vcenter card-table display">
+                  <thead>
+                  <tr>
+                    <th data-i18n="table.h.id"></th>
+                    <th data-i18n="table.h.area"></th>
+                    <th data-i18n="table.h.c3"></th>
+                    <th data-i18n="table.h.c30"></th>
+                    <th data-i18n="table.h.c300"></th>
+                    <th data-i18n="table.h.score"></th>
+                  </tr>
+                  </thead>
+                  <tbody id="areas-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+          <div class="container-xl">
+            <div class="row">
+              <div class="col-md-8">
+                <span data-i18n="footer.text"></span>
+              </div>
+              <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                <a href="https://talea-platform.github.io" target="_blank" rel="noopener"
+                   class="text-decoration-none" data-i18n="footer.maintainer"></a>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+      </div>
     </div>
+  </div>
+</div>
 
-    <!-- Tabler JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
+<!-- MODAL ABOUT -->
+<div class="modal modal-blur fade" id="modal-project" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" data-i18n="modal.project.title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- What is the 3-30-300 index? -->
+        <div class="mb-3">
+          <h5 data-i18n="intro.title"></h5>
+          <p class="text-muted mb-2" data-i18n="intro.p1"></p>
+          <ul class="text-muted mb-2">
+            <li data-i18n="intro.li3"></li>
+            <li data-i18n="intro.li30"></li>
+            <li data-i18n="intro.li300"></li>
+          </ul>
+          <p class="text-muted mb-0" data-i18n="intro.p2"></p>
+        </div>
+        <hr>
+        <!-- How to read this dashboard -->
+        <div>
+          <h5 data-i18n="intro2.title"></h5>
+          <p class="text-muted mb-0" data-i18n="intro2.p"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-dismiss="modal" type="button" data-i18n="modal.close"></button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        const translations = {
-            en: {
-                "header.brand": "Urban Green Accessibility",
-                "header.title": "3-30-300 Index Dashboard",
-                "header.subtitle": "Evidence-based support for climate-resilient and inclusive cities.",
-                "nav.overview": "Overview",
-                "nav.summary": "Summary indicators",
-                "nav.charts": "Charts",
-                "nav.map": "Maps",
-                "nav.table": "Table",
-                "nav.modal": "About 3-30-300",
-                "intro.title": "What is the 3-30-300 index?",
-                "intro.p1": "The 3-30-300 index evaluates how each urban statistical area satisfies three key green accessibility criteria:",
-                "intro.li3": "3 – at least 3 trees visible from a building window.",
-                "intro.li30": "30 – the area where you are located must have 30% tree cover.",
-                "intro.li300": "300 – the building is located at least 300m from a publicly accessible green space.",
-		 "intro.p2": "Indicators are computed at statistical-area level and can support analysis of urban fragility, environmental quality and climate adaptation strategies.",
-		"intro.p2ref": "Reference: ",
-                "intro2.title": "How to read this dashboard",
-                "intro2.p": "Summary cards show the share of areas meeting each criterion. Charts describe the distribution of scores from 0 to 3. The map tabs offer different spatial views of the same dataset. The table reports detailed indicators for each statistical area.",
-                "card3.sub": "Criterion 3",
-                "card3.text": "Percentage of areas where a sufficient share of buildings is near at least three trees.",
-                "card30.sub": "Criterion 30",
-                "card30.text": "Percentage of areas with tree canopy coverage greater than or equal to 30%.",
-                "card300.sub": "Criterion 300",
-                "card300.text": "Percentage of areas where most buildings are within 300 m of a park or garden.",
-                "chart.perc.title": "Share of areas meeting each criterion",
-                "chart.perc.text": "Percentage of statistical areas that satisfy each component of the 3-30-300 index.",
-                "chart.dist.title": "Areas by score (0–3)",
-                "chart.dist.text": "Number of areas by how many conditions they meet (from 0 to 3).",
-                "summary.score.title": "Distribution of 3-30-300 scores",
-                "summary.score.text": "Proportion of areas by score from 0 to 3. Higher scores mean that more conditions of the 3-30-300 index are met.",
-                "map.tab.score": "Score (0–3)",
-                "map.tab.c3": "Criterion 3",
-                "map.tab.c30": "Criterion 30 (canopy)",
-                "map.tab.c300": "Criterion 300",
-                "map.main.title": "Map – 3-30-300 views",
-                "map.main.text": "Use the tabs to switch between the overall score, the 3 condition (trees near buildings), the 30 condition (canopy) and the 300 condition (access to parks).",
-                "legend.score.c0": "Score 0 – none of the conditions are met.",
-                "legend.score.c1": "Score 1 – one condition is met.",
-                "legend.score.c2": "Score 2 – two conditions are met.",
-                "legend.score.c3": "Score 3 – all three conditions are met.",
-                "legend.canopy.0": "0–10% canopy",
-                "legend.canopy.1": "10–30% canopy",
-                "legend.canopy.2": "30–60% canopy",
-                "legend.canopy.3": "60–90% canopy",
-                "legend.canopy.4": "90–100% canopy",
-                "legend.c3.yes": "Areas meeting criterion 3",
-                "legend.c3.no": "Areas not meeting criterion 3",
-                "legend.c300.yes": "Areas meeting criterion 300",
-                "legend.c300.no": "Areas not meeting criterion 300",
-                "table.title": "Indicators by statistical area",
-                "table.h.id": "ID",
-                "table.h.area": "Area",
-                "table.h.c3": "3",
-                "table.h.c30": "30",
-                "table.h.c300": "300",
-                "table.h.score": "Score",
-                "footer.text": "Dashboard for exploratory analysis of the 3-30-300 index at statistical-area level. Data and code are provided for research, planning and public discussion.",
-                "footer.maintainer": "Talea Project",
-                "modal.project.title": "About the 3-30-300 project",
-                "modal.project.body": "The 3-30-300 approach links urban greening policies to three simple, measurable conditions: trees should be visible from every home. (3), sufficient tree canopy cover each neighborhood (30) and easy access to parks (300). In this project the index is computed on top of open geospatial data to support evidence-informed planning, climate resilience strategies and the evaluation of inequalities in access to urban nature.",
-		 "modal.project.ref": "Based on the work ",
-                "modal.close": "Close",
-                "popup.name": "Area",
-                "popup.id": "ID",
-                "popup.score": "Score",
-                "popup.c3": "Criterion 3",
-                "popup.c30": "Criterion 30",
-                "popup.c300": "Criterion 300",
-                "popup.canopy": "Canopy"
-            },
-            it: {
-                "header.brand": "Accessibilità al verde urbano",
-                "header.title": "Dashboard indice 3-30-300",
-                "header.subtitle": "Supporto alla transizione verde urbana e alla resilienza climatica basato su dati.",
-                "nav.overview": "Panoramica",
-                "nav.summary": "Indicatori di sintesi",
-                "nav.charts": "Grafici",
-                "nav.map": "Mappe",
-                "nav.table": "Tabella",
-                "nav.modal": "Informazioni 3-30-300",
-                "intro.title": "Cos’è l’indice 3-30-300?",
-                "intro.p1": "L’indice 3-30-300 valuta quanto ogni area statistica urbana soddisfa tre criteri chiave di accessibilità al verde:",
-                "intro.li3": "3 – almeno 3 alberi visibili dalla finestra di un edificio",
-                "intro.li30": "30 – l'area dove ci si trova deve avere una copertura arborea del 30%.",
-                "intro.li300": "300 – l'edificio si trova ad almeno 300m di uno spazio verde di pubblico accesso.",
-                "intro.p2": "Gli indicatori sono calcolati a livello di area statistica e possono supportare analisi su fragilità urbana, qualità ambientale e strategie di adattamento climatico.",
-		"intro.p2ref": "Riferimento ",
-                "intro2.title": "Come leggere questa dashboard",
-                "intro2.p": "Le card di sintesi mostrano la quota di aree che soddisfa ciascun criterio. I grafici descrivono la distribuzione dei punteggi da 0 a 3. Le tab della mappa offrono diverse viste spaziali sullo stesso dataset. La tabella riporta gli indicatori di dettaglio per ogni area statistica.",
-                "card3.sub": "Criterio 3",
-                "card3.text": "Percentuale di aree in cui una quota sufficiente di edifici è vicina ad almeno tre alberi.",
-                "card30.sub": "Criterio 30",
-                "card30.text": "Percentuale di aree con copertura arborea maggiore o uguale al 30%.",
-                "card300.sub": "Criterio 300",
-                "card300.text": "Percentuale di aree in cui la maggior parte degli edifici è entro 300 m da un parco o giardino.",
-                "chart.perc.title": "Quota di aree che soddisfa ciascun criterio",
-                "chart.perc.text": "Percentuale di aree statistiche che soddisfa ciascun componente dell’indice 3-30-300.",
-                "chart.dist.title": "Aree per punteggio (0–3)",
-                "chart.dist.text": "Numero di aree in base al numero di condizioni soddisfatte (da 0 a 3).",
-                "summary.score.title": "Distribuzione dei punteggi 3-30-300",
-                "summary.score.text": "Quota di aree per punteggio da 0 a 3. Punteggi più alti indicano che sono soddisfatte più condizioni dell’indice 3-30-300.",
-                "map.tab.score": "Punteggio (0–3)",
-                "map.tab.c3": "Criterio 3",
-                "map.tab.c30": "Criterio 30 (canopy)",
-                "map.tab.c300": "Criterio 300",
-                "map.main.title": "Mappa – viste dell’indice 3-30-300",
-                "map.main.text": "Utilizza le tab per passare dalla vista sul punteggio complessivo alle singole condizioni 3 (alberi vicino agli edifici), 30 (canopy) e 300 (accesso ai parchi).",
-                "legend.score.c0": "Punteggio 0 – nessuna condizione soddisfatta.",
-                "legend.score.c1": "Punteggio 1 – una condizione soddisfatta.",
-                "legend.score.c2": "Punteggio 2 – due condizioni soddisfatte.",
-                "legend.score.c3": "Punteggio 3 – tutte e tre le condizioni soddisfatte.",
-                "legend.canopy.0": "0–10% canopy",
-                "legend.canopy.1": "10–30% canopy",
-                "legend.canopy.2": "30–60% canopy",
-                "legend.canopy.3": "60–90% canopy",
-                "legend.canopy.4": "90–100% canopy",
-                "legend.c3.yes": "Aree che soddisfano il criterio 3",
-                "legend.c3.no": "Aree che non soddisfano il criterio 3",
-                "legend.c300.yes": "Aree che soddisfano il criterio 300",
-                "legend.c300.no": "Aree che non soddisfano il criterio 300",
-                "table.title": "Indicatori per area statistica",
-                "table.h.id": "ID",
-                "table.h.area": "Area",
-                "table.h.c3": "3",
-                "table.h.c30": "30",
-                "table.h.c300": "300",
-                "table.h.score": "Punteggio",
-                "footer.text": "Dashboard per l’analisi esplorativa dell’indice 3-30-300 a livello di area statistica. Dati e codice sono forniti per ricerca, pianificazione e discussione pubblica.",
-                "footer.maintainer": "Progetto Talea",
-                "modal.project.title": "Informazioni sul progetto 3-30-300",
-                "modal.project.body": "L’approccio 3-30-300 collega le politiche di inverdimento urbano a tre condizioni semplici e misurabili: numero di alberi visibile da una abitazione (3), sufficiente copertura arborea (30) e distanza di accesso ai parchi pubblici (300). In questo progetto l’indice è calcolato a partire da dati geospaziali aperti per supportare la pianificazione basata su evidenze, le strategie di resilienza climatica e la valutazione delle disuguaglianze di accesso alla natura in città.",
-		"modal.project.ref": "Basato sul lavoro ",
-                "modal.close": "Chiudi",
-                "popup.name": "Area",
-                "popup.id": "ID",
-                "popup.score": "Punteggio",
-                "popup.c3": "Criterio 3",
-                "popup.c30": "Criterio 30",
-                "popup.c300": "Criterio 300",
-                "popup.canopy": "Canopy"
-            }
-        };
+<!-- Tabler JS -->
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
 
-        let currentLang = "en";
-        let mapMain = null;
-        let currentMapMode = "score";
+<script>
+const translations = {
+  en: {
+    "header.brand": "Urban Green Accessibility",
+    "header.title": "3-30-300 Index Dashboard",
+    "header.subtitle": "Evidence-based support for climate-resilient and inclusive cities.",
+    "overview.title": "Dashboard overview",
+    "overview.text": "This page offers an interactive exploration of the 3-30-300 index at statistical-area level: summary indicators, charts, maps and a detailed table help understand how urban green is distributed across the city.",
+    "nav.overview": "Overview",
+    "nav.summary": "Summary indicators",
+    "nav.map": "Maps & charts",
+    "nav.table": "Table",
+    "nav.modal": "About 3-30-300",
+    "intro.title": "What is the 3-30-300 index?",
+    "intro.p1": "The 3-30-300 index evaluates how each urban statistical area satisfies three key green accessibility criteria:",
+    "intro.li3": "3 – buildings are close to at least three trees.",
+    "intro.li30": "30 – tree canopy coverage reaches at least 30% of the area.",
+    "intro.li300": "300 – most buildings are within 300 m of a park or garden.",
+    "intro.p2": "Indicators are computed at statistical-area level and can support analysis of urban fragility, environmental quality and climate adaptation strategies.",
+    "intro2.title": "How to read this dashboard",
+    "intro2.p": "Summary cards show the share of areas meeting each criterion. Charts describe the distribution of scores from 0 to 3. The map tabs offer different spatial views of the same dataset. The table reports detailed indicators for each statistical area.",
+    "card3.sub": "Criterion 3",
+    "card3.text": "Percentage of areas where a sufficient share of buildings is near at least three trees.",
+    "card30.sub": "Criterion 30",
+    "card30.text": "Percentage of areas with tree canopy coverage greater than or equal to 30%.",
+    "card300.sub": "Criterion 300",
+    "card300.text": "Percentage of areas where most buildings are within 300 m of a park or garden.",
+    "chart.perc.title": "Areas meeting 3 / 30 / 300",
+    "chart.dist.title": "Areas by score (0–3)",
+    "chart.progress.title": "% of areas by score",
+    "summary.score.title": "Distribution of 3-30-300 scores",
+    "summary.score.text": "The charts below summarise how many conditions of the 3-30-300 index are met in each statistical area and how the three individual criteria contribute.",
+    "map.tab.score": "Score (0–3)",
+    "map.tab.c3": "Criterion 3",
+    "map.tab.c30": "Criterion 30 (canopy)",
+    "map.tab.c300": "Criterion 300",
+    "map.main.title": "Map – 3-30-300 views",
+    "map.main.text": "Use the tabs to switch between the overall score, the 3 condition (trees near buildings), the 30 condition (canopy) and the 300 condition (access to parks). Click on an area to see its indicators.",
+    "map.opacity": "Layer opacity",
+    "legend.score.c0": "Score 0 – none of the conditions are met.",
+    "legend.score.c1": "Score 1 – one condition is met.",
+    "legend.score.c2": "Score 2 – two conditions are met.",
+    "legend.score.c3": "Score 3 – all three conditions are met.",
+    "legend.canopy.0": "0–10% canopy",
+    "legend.canopy.1": "10–30% canopy",
+    "legend.canopy.2": "30–60% canopy",
+    "legend.canopy.3": "60–90% canopy",
+    "legend.canopy.4": "90–100% canopy",
+    "legend.c3.yes": "Areas meeting criterion 3",
+    "legend.c3.no": "Areas not meeting criterion 3",
+    "legend.c300.yes": "Areas meeting criterion 300",
+    "legend.c300.no": "Areas not meeting criterion 300",
+    "table.title": "Indicators by statistical area",
+    "table.h.id": "ID",
+    "table.h.area": "Area",
+    "table.h.c3": "3",
+    "table.h.c30": "30",
+    "table.h.c300": "300",
+    "table.h.score": "Score",
+    "table.legend.3": "buildings near ≥3 trees",
+    "table.legend.30": "canopy cover ≥30% of area",
+    "table.legend.300": "most buildings within 300 m of a park or garden",
+    "table.legend.yes": "criterion met",
+    "table.legend.no": "criterion not met",
+    "footer.text": "Dashboard for exploratory analysis of the 3-30-300 index at statistical-area level. Data and code are provided for research, planning and public discussion.",
+    "footer.maintainer": "Talea Project",
+    "modal.project.title": "About the 3-30-300 index and this dashboard",
+    "modal.close": "Close",
+    "popup.name": "Area",
+    "popup.id": "ID",
+    "popup.score": "Score",
+    "popup.c3": "Criterion 3",
+    "popup.c30": "Criterion 30",
+    "popup.c300": "Criterion 300",
+    "popup.canopy": "Canopy"
+  },
+  it: {
+    "header.brand": "Accessibilità al verde urbano",
+    "header.title": "Dashboard indice 3-30-300",
+    "header.subtitle": "Supporto alla transizione verde urbana e alla resilienza climatica basato su dati.",
+    "overview.title": "Panoramica della dashboard",
+    "overview.text": "Questa pagina offre un’esplorazione interattiva dell’indice 3-30-300 a livello di area statistica: indicatori di sintesi, grafici, mappe e una tabella di dettaglio aiutano a capire come il verde urbano è distribuito nella città.",
+    "nav.overview": "Panoramica",
+    "nav.summary": "Indicatori di sintesi",
+    "nav.map": "Mappe e grafici",
+    "nav.table": "Tabella",
+    "nav.modal": "Informazioni 3-30-300",
+    "intro.title": "Cos’è l’indice 3-30-300?",
+    "intro.p1": "L’indice 3-30-300 valuta quanto ogni area statistica urbana soddisfa tre criteri chiave di accessibilità al verde:",
+    "intro.li3": "3 – edifici in prossimità di almeno tre alberi.",
+    "intro.li30": "30 – copertura arborea pari ad almeno il 30% dell’area.",
+    "intro.li300": "300 – la maggior parte degli edifici si trova entro 300 m da un parco o giardino.",
+    "intro.p2": "Gli indicatori sono calcolati a livello di area statistica e possono supportare analisi su fragilità urbana, qualità ambientale e strategie di adattamento climatico.",
+    "intro2.title": "Come leggere questa dashboard",
+    "intro2.p": "Le card di sintesi mostrano la quota di aree che soddisfa ciascun criterio. I grafici descrivono la distribuzione dei punteggi da 0 a 3. Le tab della mappa offrono diverse viste spaziali sullo stesso dataset. La tabella riporta gli indicatori di dettaglio per ogni area statistica.",
+    "card3.sub": "Criterio 3",
+    "card3.text": "Percentuale di aree in cui una quota sufficiente di edifici è vicina ad almeno tre alberi.",
+    "card30.sub": "Criterio 30",
+    "card30.text": "Percentuale di aree con copertura arborea maggiore o uguale al 30%.",
+    "card300.sub": "Criterio 300",
+    "card300.text": "Percentuale di aree in cui la maggior parte degli edifici è entro 300 m da un parco o giardino.",
+    "chart.perc.title": "Aree che soddisfano 3 / 30 / 300",
+    "chart.dist.title": "Aree per punteggio (0–3)",
+    "chart.progress.title": "% di aree per punteggio",
+    "summary.score.title": "Distribuzione dei punteggi 3-30-300",
+    "summary.score.text": "I grafici sottostanti riassumono quante condizioni dell’indice 3-30-300 sono soddisfatte in ciascuna area statistica e come contribuiscono i tre criteri.",
+    "map.tab.score": "Punteggio (0–3)",
+    "map.tab.c3": "Criterio 3",
+    "map.tab.c30": "Criterio 30 (canopy)",
+    "map.tab.c300": "Criterio 300",
+    "map.main.title": "Mappa – viste dell’indice 3-30-300",
+    "map.main.text": "Utilizza le tab per passare dalla vista sul punteggio complessivo alle singole condizioni 3 (alberi vicino agli edifici), 30 (canopy) e 300 (accesso ai parchi). Clicca su un’area per vedere i relativi indicatori.",
+    "map.opacity": "Trasparenza layer",
+    "legend.score.c0": "Punteggio 0 – nessuna condizione soddisfatta.",
+    "legend.score.c1": "Punteggio 1 – una condizione soddisfatta.",
+    "legend.score.c2": "Punteggio 2 – due condizioni soddisfatte.",
+    "legend.score.c3": "Punteggio 3 – tutte e tre le condizioni soddisfatte.",
+    "legend.canopy.0": "0–10% canopy",
+    "legend.canopy.1": "10–30% canopy",
+    "legend.canopy.2": "30–60% canopy",
+    "legend.canopy.3": "60–90% canopy",
+    "legend.canopy.4": "90–100% canopy",
+    "legend.c3.yes": "Aree che soddisfano il criterio 3",
+    "legend.c3.no": "Aree che non soddisfano il criterio 3",
+    "legend.c300.yes": "Aree che soddisfano il criterio 300",
+    "legend.c300.no": "Aree che non soddisfano il criterio 300",
+    "table.title": "Indicatori per area statistica",
+    "table.h.id": "ID",
+    "table.h.area": "Area",
+    "table.h.c3": "3",
+    "table.h.c30": "30",
+    "table.h.c300": "300",
+    "table.h.score": "Punteggio",
+    "table.legend.3": "edifici vicini a ≥3 alberi",
+    "table.legend.30": "canopy ≥30% dell’area",
+    "table.legend.300": "maggior parte degli edifici entro 300 m da un parco o giardino",
+    "table.legend.yes": "criterio soddisfatto",
+    "table.legend.no": "criterio non soddisfatto",
+    "footer.text": "Dashboard per l’analisi esplorativa dell’indice 3-30-300 a livello di area statistica. Dati e codice sono forniti per ricerca, pianificazione e discussione pubblica.",
+    "footer.maintainer": "Talea Project",
+    "modal.project.title": "Informazioni sull’indice 3-30-300 e sulla dashboard",
+    "modal.close": "Chiudi",
+    "popup.name": "Area",
+    "popup.id": "ID",
+    "popup.score": "Punteggio",
+    "popup.c3": "Criterio 3",
+    "popup.c30": "Criterio 30",
+    "popup.c300": "Criterio 300",
+    "popup.canopy": "Canopy"
+  }
+};
 
-        function applyTranslations(lang) {
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (translations[lang][key] !== undefined) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.querySelectorAll(".btn-lang").forEach(btn => btn.classList.remove("active"));
-            document.getElementById("lang-" + lang).classList.add("active");
-            currentLang = lang;
-            if (typeof updateLegend === "function") updateLegend(currentMapMode);
-        }
+let currentLang = "en";
+let mapMain = null;
+let currentMapMode = "score";
 
-        document.getElementById("lang-en").addEventListener("click", () => applyTranslations("en"));
-        document.getElementById("lang-it").addEventListener("click", () => applyTranslations("it"));
+function applyTranslations(lang) {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[lang][key] !== undefined) {
+      el.textContent = translations[lang][key];
+    }
+  });
+  document.querySelectorAll(".btn-lang").forEach(btn => btn.classList.remove("active"));
+  document.getElementById("lang-" + lang).classList.add("active");
+  currentLang = lang;
+  if (typeof updateLegend === "function") updateLegend(currentMapMode);
+}
 
-        function updateLegend(mode) {
-            currentMapMode = mode;
-            const el = document.getElementById("map-legend");
-            if (!el) return;
-            const t = translations[currentLang];
-            if (mode === "score") {
-                el.innerHTML = `
+document.getElementById("lang-en").addEventListener("click", () => applyTranslations("en"));
+document.getElementById("lang-it").addEventListener("click", () => applyTranslations("it"));
+
+function updateLegend(mode) {
+  currentMapMode = mode;
+  const el = document.getElementById("map-legend");
+  if (!el) return;
+  const t = translations[currentLang];
+  if (mode === "score") {
+    el.innerHTML = `
       <span class="legend-item"><span class="legend-color score-0"></span>${t["legend.score.c0"]}</span>
       <span class="legend-item"><span class="legend-color score-1"></span>${t["legend.score.c1"]}</span>
       <span class="legend-item"><span class="legend-color score-2"></span>${t["legend.score.c2"]}</span>
       <span class="legend-item"><span class="legend-color score-3"></span>${t["legend.score.c3"]}</span>
     `;
-            } else if (mode === "c30") {
-                el.innerHTML = `
+  } else if (mode === "c30") {
+    el.innerHTML = `
       <span class="legend-item"><span class="legend-color canopy-0"></span>${t["legend.canopy.0"]}</span>
       <span class="legend-item"><span class="legend-color canopy-1"></span>${t["legend.canopy.1"]}</span>
       <span class="legend-item"><span class="legend-color canopy-2"></span>${t["legend.canopy.2"]}</span>
       <span class="legend-item"><span class="legend-color canopy-3"></span>${t["legend.canopy.3"]}</span>
       <span class="legend-item"><span class="legend-color canopy-4"></span>${t["legend.canopy.4"]}</span>
     `;
-            } else if (mode === "c3") {
-                el.innerHTML = `
+  } else if (mode === "c3") {
+    el.innerHTML = `
       <span class="legend-item"><span class="legend-color bin-yes"></span>${t["legend.c3.yes"]}</span>
       <span class="legend-item"><span class="legend-color bin-no"></span>${t["legend.c3.no"]}</span>
     `;
-            } else if (mode === "c300") {
-                el.innerHTML = `
+  } else if (mode === "c300") {
+    el.innerHTML = `
       <span class="legend-item"><span class="legend-color bin-yes"></span>${t["legend.c300.yes"]}</span>
       <span class="legend-item"><span class="legend-color bin-no"></span>${t["legend.c300.no"]}</span>
     `;
-            }
-        }
+  }
+}
 
-        async function loadData() {
-            applyTranslations(currentLang);
+async function loadData() {
+  applyTranslations(currentLang);
 
-            const res = await fetch("data/3-30-300-index.geojson");
-            const geojson = await res.json();
-            const features = geojson.features;
+  const res = await fetch("data/3-30-300-index.geojson");
+  const geojson = await res.json();
+  const features = geojson.features;
 
-            const perc = field =>
-                100 * (features.filter(f => f.properties[field] === true).length / features.length);
+  const featureById = {};
+  features.forEach(f => {
+    featureById[f.properties.stat_area_id] = f;
+  });
 
-            const p3 = perc("meet_3");
-            const p30 = perc("meet_30");
-            const p300 = perc("meet_300");
+  const perc = field =>
+    100 * (features.filter(f => f.properties[field] === true).length / features.length);
 
-            document.getElementById("summary-3").textContent = p3.toFixed(1) + "%";
-            document.getElementById("summary-30").textContent = p30.toFixed(1) + "%";
-            document.getElementById("summary-300").textContent = p300.toFixed(1) + "%";
+  const p3 = perc("meet_3");
+  const p30 = perc("meet_30");
+  const p300 = perc("meet_300");
 
-            const dist = {
-                0: 0,
-                1: 0,
-                2: 0,
-                3: 0
-            };
-            features.forEach(f => {
-                const k = f.properties.num_conditions_met;
-                if (dist.hasOwnProperty(k)) dist[k] += 1;
-            });
+  document.getElementById("summary-3").textContent = p3.toFixed(1) + "%";
+  document.getElementById("summary-30").textContent = p30.toFixed(1) + "%";
+  document.getElementById("summary-300").textContent = p300.toFixed(1) + "%";
 
-            const totalAreas = features.length;
-            const pct0 = 100 * dist[0] / totalAreas;
-            const pct1 = 100 * dist[1] / totalAreas;
-            const pct2 = 100 * dist[2] / totalAreas;
-            const pct3 = 100 * dist[3] / totalAreas;
+  const dist = {0:0,1:0,2:0,3:0};
+  features.forEach(f => {
+    const k = f.properties.num_conditions_met;
+    if (dist.hasOwnProperty(k)) dist[k] += 1;
+  });
 
-            document.getElementById("score0-pct").textContent = pct0.toFixed(1) + "%";
-            document.getElementById("score1-pct").textContent = pct1.toFixed(1) + "%";
-            document.getElementById("score2-pct").textContent = pct2.toFixed(1) + "%";
-            document.getElementById("score3-pct").textContent = pct3.toFixed(1) + "%";
+  const totalAreas = features.length;
+  const pct0 = 100 * dist[0] / totalAreas;
+  const pct1 = 100 * dist[1] / totalAreas;
+  const pct2 = 100 * dist[2] / totalAreas;
+  const pct3 = 100 * dist[3] / totalAreas;
 
-            document.getElementById("prog-score-0").style.width = pct0 + "%";
-            document.getElementById("prog-score-1").style.width = pct1 + "%";
-            document.getElementById("prog-score-2").style.width = pct2 + "%";
-            document.getElementById("prog-score-3").style.width = pct3 + "%";
-
-            // TABLA
-            const tbody = document.getElementById("areas-table-body");
-            features.forEach(f => {
-                const p = f.properties;
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
+  // TABLE
+  const tbody = document.getElementById("areas-table-body");
+  features.forEach(f => {
+    const p = f.properties;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${p.stat_area_id}</td>
       <td>${p.stat_area_name}</td>
       <td><span class="${p.meet_3 ? "val-yes" : "val-no"}">${p.meet_3 ? "✔" : "✖"}</span></td>
@@ -762,214 +725,218 @@
       <td><span class="${p.meet_300 ? "val-yes" : "val-no"}">${p.meet_300 ? "✔" : "✖"}</span></td>
       <td>${p.num_conditions_met}</td>
     `;
-                tbody.appendChild(tr);
-            });
+    tbody.appendChild(tr);
+  });
 
-            $('#areas-table').DataTable({
-                paging: true,
-                searching: true,
-                info: true,
-                order: [
-                    [5, 'desc']
-                ]
-            });
+  const table = $('#areas-table').DataTable({
+    paging: true,
+    searching: true,
+    info: true,
+    order: [[5, 'desc']]
+  });
 
-            // Charts – barre tutte verde Talea
-            const taleaGreen = "#38b850";
+  const taleaGreen = "#38b850";
 
-            const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
-            new Chart(ctxPerc, {
-                type: 'bar',
-                data: {
-                    labels: ['3', '30', '300'],
-                    datasets: [{
-                        data: [p3, p30, p300],
-                        backgroundColor: taleaGreen
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: v => v + '%'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
+// chart-percentages
+const ctxPerc = document.getElementById("chart-percentages").getContext("2d");
+new Chart(ctxPerc, {
+  type: 'bar',
+  data: {
+    labels: ['3', '30', '300'],
+    datasets: [{
+      data: [p3, p30, p300],
+      // stesse tinte usate nella mappa:
+      // giallo (1 condizione), blu (2), verde (3)
+      backgroundColor: [
+        '#f7e91a', // 3
+        '#3673c0', // 30
+        '#38b850'  // 300
+      ]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => v + '%' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
 
-            const ctxDist = document.getElementById("chart-distribution").getContext("2d");
-            new Chart(ctxDist, {
-                type: 'bar',
-                data: {
-                    labels: ['0', '1', '2', '3'],
-                    datasets: [{
-                        data: [dist[0], dist[1], dist[2], dist[3]],
-                        backgroundColor: taleaGreen
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
 
-            // bounds helper
-            const bounds = new maplibregl.LngLatBounds();
+  // chart-distribution
+  const ctxDist = document.getElementById("chart-distribution").getContext("2d");
+  new Chart(ctxDist, {
+    type: 'bar',
+    data: {
+      labels: ['0','1','2','3'],
+      datasets: [{
+        data: [dist[0], dist[1], dist[2], dist[3]],
+        backgroundColor: taleaGreen
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true },
+        x: { grid: { display: false } }
+      }
+    }
+  });
 
-            function extendBounds(coords) {
-                if (typeof coords[0] === 'number') {
-                    bounds.extend(coords);
-                } else {
-                    coords.forEach(extendBounds);
-                }
-            }
-            features.forEach(f => extendBounds(f.geometry.coordinates));
+  // progress (bar verticale % per punteggio)
+  const ctxProg = document.getElementById("progress").getContext("2d");
+  new Chart(ctxProg, {
+    type: 'bar',
+    data: {
+      labels: ['0','1','2','3'],
+      datasets: [{
+        data: [pct0, pct1, pct2, pct3],
+        backgroundColor: taleaGreen
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v + '%' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
 
-            // MAPPA PRINCIPALE
-            mapMain = new maplibregl.Map({
-                container: 'map-main',
-                style: 'https://tiles.openfreemap.org/styles/liberty',
-                center: [11.343, 44.494],
-                zoom: 11
-            });
+  // funzione bounds ricorsiva
+  function extendBoundsGeneric(coords, b) {
+    if (typeof coords[0] === 'number') {
+      b.extend(coords);
+    } else {
+      coords.forEach(c => extendBoundsGeneric(c, b));
+    }
+  }
 
-            mapMain.on('load', () => {
-                mapMain.addSource("areas", {
-                    type: "geojson",
-                    data: geojson
-                });
+  const bounds = new maplibregl.LngLatBounds();
+  features.forEach(f => extendBoundsGeneric(f.geometry.coordinates, bounds));
 
-                // layers
-                mapMain.addLayer({
-                    id: "areas-score-fill",
-                    type: "fill",
-                    source: "areas",
-                    paint: {
-                        "fill-color": [
-                            "match", ["get", "num_conditions_met"],
-                            0, "#d1d1d1",
-                            1, "#f7e91a",
-                            2, "#3673c0",
-                            3, "#38b850",
-                            "#cccccc"
-                        ],
-                        "fill-opacity": 0.7
-                    }
-                });
+  // MAPPA
+  mapMain = new maplibregl.Map({
+    container: 'map-main',
+    style: 'https://tiles.openfreemap.org/styles/liberty',
+    center: [11.343, 44.494],
+    zoom: 11
+  });
 
-                mapMain.addLayer({
-                    id: "areas-c3-fill",
-                    type: "fill",
-                    source: "areas",
-                    paint: {
-                        "fill-color": [
-                            "case", ["==", ["get", "meet_3"], true],
-                            "#38b850",
-                            "#d1d1d1"
-                        ],
-                        "fill-opacity": 0.7
-                    },
-                    layout: {
-                        "visibility": "none"
-                    }
-                });
+  mapMain.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
-                mapMain.addLayer({
-                    id: "areas-c30-fill",
-                    type: "fill",
-                    source: "areas",
-                    paint: {
-                        "fill-color": [
-                            "interpolate", ["linear"],
-                            ["get", "perc_canopy_cover_30"],
-                            0, "#f7fcf5",
-                            10, "#e5f5e0",
-                            30, "#a1d99b",
-                            60, "#31a354",
-                            90, "#006d2c"
-                        ],
-                        "fill-opacity": 0.7
-                    },
-                    layout: {
-                        "visibility": "none"
-                    }
-                });
+  mapMain.on('load', () => {
+    mapMain.addSource("areas", { type: "geojson", data: geojson });
 
-                mapMain.addLayer({
-                    id: "areas-c300-fill",
-                    type: "fill",
-                    source: "areas",
-                    paint: {
-                        "fill-color": [
-                            "case", ["==", ["get", "meet_300"], true],
-                            "#38b850",
-                            "#d1d1d1"
-                        ],
-                        "fill-opacity": 0.7
-                    },
-                    layout: {
-                        "visibility": "none"
-                    }
-                });
+    mapMain.addLayer({
+      id: "areas-score-fill",
+      type: "fill",
+      source: "areas",
+      paint: {
+        "fill-color": [
+          "match",
+          ["get", "num_conditions_met"],
+          0, "#d1d1d1",
+          1, "#f7e91a",
+          2, "#3673c0",
+          3, "#38b850",
+          "#cccccc"
+        ],
+        "fill-opacity": 0.7
+      }
+    });
 
-                mapMain.addLayer({
-                    id: "areas-outline",
-                    type: "line",
-                    source: "areas",
-                    paint: {
-                        "line-color": "#333333",
-                        "line-width": 0.8
-                    }
-                });
+    mapMain.addLayer({
+      id: "areas-c3-fill",
+      type: "fill",
+      source: "areas",
+      paint: {
+        "fill-color": [
+          "case",
+          ["==", ["get", "meet_3"], true],
+          "#38b850",
+          "#d1d1d1"
+        ],
+        "fill-opacity": 0.7
+      },
+      layout: { "visibility": "none" }
+    });
 
-                mapMain.fitBounds(bounds, {
-                    padding: 20
-                });
-                updateLegend("score");
+    mapMain.addLayer({
+      id: "areas-c30-fill",
+      type: "fill",
+      source: "areas",
+      paint: {
+        "fill-color": [
+          "interpolate",
+          ["linear"],
+          ["get", "perc_canopy_cover_30"],
+          0,   "#f7fcf5",
+          10,  "#e5f5e0",
+          30,  "#a1d99b",
+          60,  "#31a354",
+          90,  "#006d2c"
+        ],
+        "fill-opacity": 0.7
+      },
+      layout: { "visibility": "none" }
+    });
 
-                const popup = new maplibregl.Popup({
-                    closeButton: true,
-                    closeOnClick: true
-                });
+    mapMain.addLayer({
+      id: "areas-c300-fill",
+      type: "fill",
+      source: "areas",
+      paint: {
+        "fill-color": [
+          "case",
+          ["==", ["get", "meet_300"], true],
+          "#38b850",
+          "#d1d1d1"
+        ],
+        "fill-opacity": 0.7
+      },
+      layout: { "visibility": "none" }
+    });
 
-                function onFeatureClick(e) {
-                    const f = e.features[0];
-                    if (!f) return;
-                    const p = f.properties;
-                    const t = translations[currentLang];
-                    const yes = '<span style="color:#38b850;font-weight:600;">✔</span>';
-                    const no = '<span style="color:#d9534f;font-weight:600;">✖</span>';
-                    const canopyVal = (typeof p.perc_canopy_cover_30 === "number") ?
-                        p.perc_canopy_cover_30.toFixed(1) :
-                        p.perc_canopy_cover_30;
-                    const html = `
+    mapMain.addLayer({
+      id: "areas-outline",
+      type: "line",
+      source: "areas",
+      paint: {
+        "line-color": "#333333",
+        "line-width": 0.8
+      }
+    });
+
+    mapMain.fitBounds(bounds, { padding: 20 });
+    updateLegend("score");
+
+    const popup = new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: true
+    });
+
+    function onFeatureClick(e) {
+      const f = e.features[0];
+      if (!f) return;
+      const p = f.properties;
+      const t = translations[currentLang];
+      const yes = '<span style="color:#38b850;font-weight:600;">✔</span>';
+      const no  = '<span style="color:#d9534f;font-weight:600;">✖</span>';
+      const canopyVal = (typeof p.perc_canopy_cover_30 === "number")
+        ? p.perc_canopy_cover_30.toFixed(1)
+        : p.perc_canopy_cover_30;
+      const html = `
         <strong>${t["popup.name"]}:</strong> ${p.stat_area_name}<br/>
         <strong>${t["popup.id"]}:</strong> ${p.stat_area_id}<br/>
         <strong>${t["popup.score"]}:</strong> ${p.num_conditions_met}<br/>
@@ -978,76 +945,81 @@
         <strong>${t["popup.c300"]}:</strong> ${p.meet_300 ? yes : no}<br/>
         <strong>${t["popup.canopy"]}:</strong> ${canopyVal}% 
       `;
-                    popup
-                        .setLngLat(e.lngLat)
-                        .setHTML(html)
-                        .addTo(mapMain);
-                }
+      popup
+        .setLngLat(e.lngLat)
+        .setHTML(html)
+        .addTo(mapMain);
+    }
 
-                ["areas-score-fill", "areas-c3-fill", "areas-c30-fill", "areas-c300-fill"].forEach(layerId => {
-                    mapMain.on("click", layerId, onFeatureClick);
-                    mapMain.on("mouseenter", layerId, () => {
-                        mapMain.getCanvas().style.cursor = "pointer";
-                    });
-                    mapMain.on("mouseleave", layerId, () => {
-                        mapMain.getCanvas().style.cursor = "";
-                    });
-                });
-            });
+    ["areas-score-fill","areas-c3-fill","areas-c30-fill","areas-c300-fill"].forEach(layerId => {
+      mapMain.on("click", layerId, onFeatureClick);
+      mapMain.on("mouseenter", layerId, () => { mapMain.getCanvas().style.cursor = "pointer"; });
+      mapMain.on("mouseleave", layerId, () => { mapMain.getCanvas().style.cursor = ""; });
+    });
+  });
 
-            // tabs map
-            document.querySelectorAll("#map-tabs .nav-link").forEach(link => {
-                link.addEventListener("click", ev => {
-                    ev.preventDefault();
-                    const mode = link.getAttribute("data-map-mode");
-                    document.querySelectorAll("#map-tabs .nav-link").forEach(l => l.classList.remove("active"));
-                    link.classList.add("active");
-                    setMapMode(mode);
-                });
-            });
+  // Slider opacità
+  const opacitySlider = document.getElementById("opacity-range");
+  opacitySlider.addEventListener("input", (e) => {
+    const val = Number(e.target.value) / 100;
+    if (!mapMain) return;
+    ["areas-score-fill","areas-c3-fill","areas-c30-fill","areas-c300-fill"].forEach(layerId => {
+      if (mapMain.getLayer(layerId)) {
+        mapMain.setPaintProperty(layerId, "fill-opacity", val);
+      }
+    });
+  });
 
-            function setMapMode(mode) {
-                currentMapMode = mode;
-                const visibility = {
-                    score: {
-                        "areas-score-fill": "visible",
-                        "areas-c3-fill": "none",
-                        "areas-c30-fill": "none",
-                        "areas-c300-fill": "none"
-                    },
-                    c3: {
-                        "areas-score-fill": "none",
-                        "areas-c3-fill": "visible",
-                        "areas-c30-fill": "none",
-                        "areas-c300-fill": "none"
-                    },
-                    c30: {
-                        "areas-score-fill": "none",
-                        "areas-c3-fill": "none",
-                        "areas-c30-fill": "visible",
-                        "areas-c300-fill": "none"
-                    },
-                    c300: {
-                        "areas-score-fill": "none",
-                        "areas-c3-fill": "none",
-                        "areas-c30-fill": "none",
-                        "areas-c300-fill": "visible"
-                    }
-                }[mode];
+  // Tabs mappa
+  document.querySelectorAll("#map-tabs .nav-link").forEach(link => {
+    link.addEventListener("click", ev => {
+      ev.preventDefault();
+      const mode = link.getAttribute("data-map-mode");
+      document.querySelectorAll("#map-tabs .nav-link").forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+      setMapMode(mode);
+    });
+  });
 
-                if (!visibility || !mapMain) return;
-                Object.entries(visibility).forEach(([layerId, vis]) => {
-                    if (mapMain.getLayer(layerId)) {
-                        mapMain.setLayoutProperty(layerId, "visibility", vis);
-                    }
-                });
-                updateLegend(mode);
-            }
-        }
+  function setMapMode(mode) {
+    currentMapMode = mode;
+    const visibility = {
+      score:  { "areas-score-fill": "visible", "areas-c3-fill": "none",   "areas-c30-fill": "none",   "areas-c300-fill": "none" },
+      c3:     { "areas-score-fill": "none",    "areas-c3-fill": "visible","areas-c30-fill": "none",   "areas-c300-fill": "none" },
+      c30:    { "areas-score-fill": "none",    "areas-c3-fill": "none",   "areas-c30-fill": "visible","areas-c300-fill": "none" },
+      c300:   { "areas-score-fill": "none",    "areas-c3-fill": "none",   "areas-c30-fill": "none",   "areas-c300-fill": "visible" }
+    }[mode];
 
-        loadData();
-    </script>
+    if (!visibility || !mapMain) return;
+    Object.entries(visibility).forEach(([layerId, vis]) => {
+      if (mapMain.getLayer(layerId)) {
+        mapMain.setLayoutProperty(layerId, "visibility", vis);
+      }
+    });
+    updateLegend(mode);
+  }
+
+  // click riga → zoom su area
+  $('#areas-table tbody').on('click', 'tr', function () {
+    const rowData = table.row(this).data();
+    if (!rowData) return;
+
+    const statId = rowData[0];
+    const feature = featureById[statId];
+    if (!feature || !mapMain) return;
+
+    const fbounds = new maplibregl.LngLatBounds();
+    extendBoundsGeneric(feature.geometry.coordinates, fbounds);
+
+    mapMain.fitBounds(fbounds, {
+      padding: 40,
+      maxZoom: 15
+    });
+  });
+}
+
+loadData();
+</script>
 
 </body>
-
 </html>
